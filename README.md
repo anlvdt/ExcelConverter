@@ -34,6 +34,35 @@ Author: Le An (Vietnam IT)
 
 ---
 
+## Usage Guide | Hướng dẫn sử dụng
+
+### Step 1: Select Source Folder | Bước 1: Chọn thư mục nguồn
+- Click **Browse...** button to select folder containing XLS/XLSM files
+- Nhấn nút **Browse...** để chọn thư mục chứa file XLS/XLSM
+
+### Step 2: Configure Options | Bước 2: Cấu hình tùy chọn
+
+| Option | Description | Mô tả |
+|--------|-------------|-------|
+| **Move original files to 'old' folder** | Move converted files to 'old' subfolder | Di chuyển file gốc vào thư mục con 'old' |
+| **Include subfolders** | Scan and convert files in all subfolders | Quét và chuyển đổi file trong tất cả thư mục con |
+| **Show Excel window** | Display Excel during conversion (for debugging) | Hiển thị Excel khi chuyển đổi (để debug) |
+| **Delete original files** | Permanently delete original files (use with caution!) | Xóa vĩnh viễn file gốc (cẩn thận!) |
+
+### Step 3: Convert | Bước 3: Chuyển đổi
+- Click **CONVERT** button to start conversion
+- Nhấn nút **CONVERT** để bắt đầu chuyển đổi
+
+### Step 4: Review Results | Bước 4: Xem kết quả
+- Check the Activity Log for conversion status and any virus detections
+- Kiểm tra Activity Log để xem trạng thái chuyển đổi và phát hiện virus
+
+### About Button (?) | Nút Giới thiệu (?)
+- Click **?** button in the header to view features and donate information
+- Nhấn nút **?** ở header để xem tính năng và thông tin ủng hộ
+
+---
+
 ## Requirements | Yêu cầu
 
 - Windows 7/8/10/11
