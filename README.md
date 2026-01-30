@@ -19,9 +19,9 @@ Author: Le An (Vietnam IT)
 - Detect malicious macros by reading code content | Phát hiện macro độc hại bằng cách đọc code
 - Auto-remove infected VBA modules | Tự động xóa VBA modules bị nhiễm
 - Scan all XLSTART folders (Office 2007-2021, 365) | Quét tất cả thư mục XLSTART
-- Detect 19+ known virus file variants | Phát hiện 19+ biến thể virus
-- Detect 21+ malicious VBA module names | Phát hiện 21+ tên module độc hại
-- Detect 8+ virus macro functions | Phát hiện 8+ hàm macro virus
+- Detect 27+ known virus file variants | Phat hien 27+ bien the virus
+- Detect 23+ malicious VBA module names | Phat hien 23+ ten module doc hai
+- Detect 8+ virus macro functions | Phat hien 8+ ham macro virus
 - Final security scan after conversion | Quét bảo mật sau khi chuyển đổi
 
 ---
@@ -61,7 +61,39 @@ Author: Le An (Vietnam IT)
 - Click **?** button in the header to view features and donate information
 - Nhấn nút **?** ở header để xem tính năng và thông tin ủng hộ
 
+### Scan XLSTART Button | Nut Quet XLSTART
+- Click **Scan XLSTART** button to launch standalone virus scanner
+- Nhan nut **Scan XLSTART** de mo cong cu quet virus doc lap
+- This tool scans and removes viruses from Excel XLSTART folders without converting files
+- Cong cu nay quet va xoa virus tu thu muc XLSTART ma khong can chuyen doi file
+
 ---
+
+## XLSStart Cleaner (Standalone Tool) | Công cụ Quét XLSTART (Độc lập)
+
+### What is XLSStart Cleaner? | XLSStart Cleaner là gì?
+A dedicated tool to scan and remove X97M/Laroux virus from Excel XLSTART folders without converting files.
+
+Công cụ chuyên dụng để quét và xóa virus X97M/Laroux từ thư mục XLSTART mà không cần chuyển đổi file.
+
+### How to use | Cách sử dụng:
+
+**Method 1: From Main GUI | Phuong phap 1: Tu GUI chinh**
+1. Open Excel Converter | Mo Excel Converter
+2. Click **Scan XLSTART** button in the header | Nhan nut **Scan XLSTART** o header
+3. XLSStart Cleaner will open in a new window | XLSStart Cleaner se mo trong cua so moi
+
+**Method 2: Run Standalone | Phương pháp 2: Chạy độc lập**
+1. Double-click `XLSStartCleaner.bat` | Double-click `XLSStartCleaner.bat`
+2. Or run `XLSStartCleaner.ps1` directly | Hoặc chạy `XLSStartCleaner.ps1` trực tiếp
+
+### Features | Tính năng:
+- **SCAN ONLY**: Detect viruses without removing them | Phát hiện virus mà không xóa
+- **SCAN & CLEAN**: Detect and permanently remove infected files | Phát hiện và xóa vĩnh viễn file nhiễm virus
+- Scans 13+ XLSTART locations (Office 2007-365) | Quét 13+ vị trí XLSTART
+- Deep VBA code analysis | Phân tích sâu VBA code
+- Detailed scan report | Báo cáo quét chi tiết
+
 
 ## Requirements | Yêu cầu
 

@@ -15,9 +15,11 @@
 - Detect malicious macros by reading code content
 - Auto-remove infected VBA modules
 - Scan all XLSTART folders (Office 2007-2021, 365)
-- Detect 19+ virus file variants
-- Detect 21+ malicious module names
+- Detect 27+ virus file variants
+- Detect 23+ malicious module names
 - Detect 8+ virus macro functions
+- **NEW: XLSStart Cleaner** - Standalone tool to scan/clean XLSTART folders without conversion
+- **NEW: Scan XLSTART button** - Quick access to virus scanner from main GUI
 
 ### Installation | Cài đặt
 1. Download ExcelConverter_v1.0.0.zip

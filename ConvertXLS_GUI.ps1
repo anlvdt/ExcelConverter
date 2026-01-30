@@ -60,7 +60,7 @@ $subtextColor = [System.Drawing.Color]::FromArgb(100, 100, 100)
 # Create main form
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "Excel Converter"
-$form.Size = New-Object System.Drawing.Size(650, 600)
+$form.Size = New-Object System.Drawing.Size(700, 590)
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "FixedSingle"
 $form.MaximizeBox = $false
@@ -70,7 +70,7 @@ $form.Font = New-Object System.Drawing.Font("Segoe UI", 9)
 # Header Panel
 $pnlHeader = New-Object System.Windows.Forms.Panel
 $pnlHeader.Location = New-Object System.Drawing.Point(0, 0)
-$pnlHeader.Size = New-Object System.Drawing.Size(650, 70)
+$pnlHeader.Size = New-Object System.Drawing.Size(700, 80)
 $pnlHeader.BackColor = $primaryColor
 $form.Controls.Add($pnlHeader)
 
@@ -92,10 +92,23 @@ $lblSubHeader.ForeColor = [System.Drawing.Color]::FromArgb(200, 255, 255, 255)
 $lblSubHeader.BackColor = [System.Drawing.Color]::Transparent
 $pnlHeader.Controls.Add($lblSubHeader)
 
+# Scan XLSTART button
+$btnScanXLStart = New-Object System.Windows.Forms.Button
+$btnScanXLStart.Text = "Scan XLSTART"
+$btnScanXLStart.Location = New-Object System.Drawing.Point(530, 25)
+$btnScanXLStart.Size = New-Object System.Drawing.Size(110, 30)
+$btnScanXLStart.FlatStyle = "Flat"
+$btnScanXLStart.BackColor = [System.Drawing.Color]::FromArgb(0, 90, 158)
+$btnScanXLStart.ForeColor = [System.Drawing.Color]::White
+$btnScanXLStart.FlatAppearance.BorderSize = 0
+$btnScanXLStart.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$btnScanXLStart.Cursor = "Hand"
+$pnlHeader.Controls.Add($btnScanXLStart)
+
 # About button
 $btnAbout = New-Object System.Windows.Forms.Button
 $btnAbout.Text = "?"
-$btnAbout.Location = New-Object System.Drawing.Point(600, 20)
+$btnAbout.Location = New-Object System.Drawing.Point(650, 25)
 $btnAbout.Size = New-Object System.Drawing.Size(30, 30)
 $btnAbout.FlatStyle = "Flat"
 $btnAbout.BackColor = [System.Drawing.Color]::FromArgb(0, 90, 180)
@@ -107,8 +120,8 @@ $pnlHeader.Controls.Add($btnAbout)
 
 # Folder Selection Card
 $pnlFolder = New-Object System.Windows.Forms.Panel
-$pnlFolder.Location = New-Object System.Drawing.Point(20, 85)
-$pnlFolder.Size = New-Object System.Drawing.Size(595, 90)
+$pnlFolder.Location = New-Object System.Drawing.Point(20, 95)
+$pnlFolder.Size = New-Object System.Drawing.Size(645, 90)
 $pnlFolder.BackColor = $cardColor
 $form.Controls.Add($pnlFolder)
 
@@ -122,7 +135,7 @@ $pnlFolder.Controls.Add($lblFolderTitle)
 
 $txtPath = New-Object System.Windows.Forms.TextBox
 $txtPath.Location = New-Object System.Drawing.Point(15, 40)
-$txtPath.Size = New-Object System.Drawing.Size(460, 30)
+$txtPath.Size = New-Object System.Drawing.Size(510, 30)
 $txtPath.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 $txtPath.Text = [Environment]::GetFolderPath("MyDocuments")
 $txtPath.BorderStyle = "FixedSingle"
@@ -130,7 +143,7 @@ $pnlFolder.Controls.Add($txtPath)
 
 $btnBrowse = New-Object System.Windows.Forms.Button
 $btnBrowse.Text = "Browse..."
-$btnBrowse.Location = New-Object System.Drawing.Point(485, 38)
+$btnBrowse.Location = New-Object System.Drawing.Point(535, 38)
 $btnBrowse.Size = New-Object System.Drawing.Size(95, 32)
 $btnBrowse.FlatStyle = "Flat"
 $btnBrowse.BackColor = $primaryColor
@@ -141,8 +154,8 @@ $pnlFolder.Controls.Add($btnBrowse)
 
 # Options Card
 $pnlOptions = New-Object System.Windows.Forms.Panel
-$pnlOptions.Location = New-Object System.Drawing.Point(20, 185)
-$pnlOptions.Size = New-Object System.Drawing.Size(595, 100)
+$pnlOptions.Location = New-Object System.Drawing.Point(20, 195)
+$pnlOptions.Size = New-Object System.Drawing.Size(645, 100)
 $pnlOptions.BackColor = $cardColor
 $form.Controls.Add($pnlOptions)
 
@@ -192,8 +205,8 @@ $pnlOptions.Controls.Add($chkDeleteOld)
 
 # Log Card
 $pnlLog = New-Object System.Windows.Forms.Panel
-$pnlLog.Location = New-Object System.Drawing.Point(20, 295)
-$pnlLog.Size = New-Object System.Drawing.Size(595, 185)
+$pnlLog.Location = New-Object System.Drawing.Point(20, 305)
+$pnlLog.Size = New-Object System.Drawing.Size(645, 175)
 $pnlLog.BackColor = $cardColor
 $form.Controls.Add($pnlLog)
 
@@ -207,7 +220,7 @@ $pnlLog.Controls.Add($lblLogTitle)
 
 $txtLog = New-Object System.Windows.Forms.TextBox
 $txtLog.Location = New-Object System.Drawing.Point(15, 38)
-$txtLog.Size = New-Object System.Drawing.Size(565, 135)
+$txtLog.Size = New-Object System.Drawing.Size(615, 125)
 $txtLog.Multiline = $true
 $txtLog.ScrollBars = "Vertical"
 $txtLog.ReadOnly = $true
@@ -220,7 +233,7 @@ $pnlLog.Controls.Add($txtLog)
 # Status Bar
 $pnlStatus = New-Object System.Windows.Forms.Panel
 $pnlStatus.Location = New-Object System.Drawing.Point(20, 490)
-$pnlStatus.Size = New-Object System.Drawing.Size(595, 40)
+$pnlStatus.Size = New-Object System.Drawing.Size(645, 40)
 $pnlStatus.BackColor = $cardColor
 $form.Controls.Add($pnlStatus)
 
@@ -234,13 +247,13 @@ $pnlStatus.Controls.Add($lblStatus)
 
 $progressBar = New-Object System.Windows.Forms.ProgressBar
 $progressBar.Location = New-Object System.Drawing.Point(170, 8)
-$progressBar.Size = New-Object System.Drawing.Size(300, 22)
+$progressBar.Size = New-Object System.Drawing.Size(350, 22)
 $progressBar.Style = "Continuous"
 $pnlStatus.Controls.Add($progressBar)
 
 $btnConvert = New-Object System.Windows.Forms.Button
 $btnConvert.Text = "CONVERT"
-$btnConvert.Location = New-Object System.Drawing.Point(485, 5)
+$btnConvert.Location = New-Object System.Drawing.Point(535, 5)
 $btnConvert.Size = New-Object System.Drawing.Size(95, 30)
 $btnConvert.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
 $btnConvert.BackColor = $successColor
@@ -254,7 +267,7 @@ $pnlStatus.Controls.Add($btnConvert)
 $lblFooter = New-Object System.Windows.Forms.Label
 $lblFooter.Text = "v1.0.0 | Le An (Vietnam IT) | Ref: gist.github.com/gabceb/954418"
 $lblFooter.Location = New-Object System.Drawing.Point(20, 538)
-$lblFooter.Size = New-Object System.Drawing.Size(595, 18)
+$lblFooter.Size = New-Object System.Drawing.Size(645, 18)
 $lblFooter.Font = New-Object System.Drawing.Font("Segoe UI", 8)
 $lblFooter.ForeColor = $subtextColor
 $lblFooter.TextAlign = "MiddleCenter"
@@ -344,7 +357,7 @@ function Remove-X97MLarouxVirus {
     foreach ($xlstartPath in $xlstartPaths) {
         if (Test-Path $xlstartPath) {
             # Get all xls/xlsm files in XLSTART
-            $xlsFiles = Get-ChildItem -Path $xlstartPath -Include "*.xls","*.xlsm","*.xla","*.xlam" -File -ErrorAction SilentlyContinue
+            $xlsFiles = Get-ChildItem -Path $xlstartPath -Include "*.xls", "*.xlsm", "*.xla", "*.xlam" -File -ErrorAction SilentlyContinue
             foreach ($file in $xlsFiles) {
                 $isVirus = $false
                 
@@ -362,7 +375,8 @@ function Remove-X97MLarouxVirus {
                         Write-Log "[VIRUS] Removed: $($file.FullName)"
                         $removedCount++
                         $removed = $true
-                    } catch {
+                    }
+                    catch {
                         Write-Log "[VIRUS] Failed to remove: $($file.FullName) - File may be in use"
                     }
                 }
@@ -378,7 +392,8 @@ function Remove-X97MLarouxVirus {
             Write-Log "[VIRUS] Removed: $xlscan386"
             $removedCount++
             $removed = $true
-        } catch {}
+        }
+        catch {}
     }
     
     if ($removedCount -gt 0) {
@@ -409,7 +424,8 @@ function Test-WorkbookForVirus {
                 }
                 
                 # Check for virus macros inside the module
-                if ($comp.Type -eq 1) { # vbext_ct_StdModule
+                if ($comp.Type -eq 1) {
+                    # vbext_ct_StdModule
                     try {
                         $codeModule = $comp.CodeModule
                         if ($codeModule.CountOfLines -gt 0) {
@@ -424,17 +440,19 @@ function Test-WorkbookForVirus {
                                 }
                             }
                         }
-                    } catch {}
+                    }
+                    catch {}
                 }
             }
         }
-    } catch {
+    }
+    catch {
         # VBA project may be protected or inaccessible
     }
     
     return @{
         Infected = $infected
-        Modules = $infectedModules
+        Modules  = $infectedModules
     }
 }
 
@@ -472,7 +490,8 @@ function Remove-VirusFromWorkbook {
                                 }
                             }
                         }
-                    } catch {}
+                    }
+                    catch {}
                 }
                 
                 if ($shouldRemove) {
@@ -487,12 +506,14 @@ function Remove-VirusFromWorkbook {
                     $vbProj.VBComponents.Remove($comp)
                     Write-Log "  [VIRUS] Removed module: $compName"
                     $removed++
-                } catch {
+                }
+                catch {
                     Write-Log "  [VIRUS] Could not remove module: $($comp.Name)"
                 }
             }
         }
-    } catch {
+    }
+    catch {
         # VBA project protected
     }
     
@@ -512,252 +533,281 @@ function Set-Status {
 }
 
 # Event Handlers
-$btnAbout.Add_Click({
-    $aboutText = "EXCEL CONVERTER v1.0.0`r`n"
-    $aboutText += "Author: Le An (Vietnam IT)`r`n"
-    $aboutText += "`r`n"
-    $aboutText += "FEATURES:`r`n"
-    $aboutText += "-----------------------------------------`r`n"
-    $aboutText += "[Conversion]`r`n"
-    $aboutText += "  - Convert XLS (Excel 97-2003) to XLSX`r`n"
-    $aboutText += "  - Convert XLSM (Macro-enabled) to XLSX`r`n"
-    $aboutText += "  - Batch convert folders with subfolders`r`n"
-    $aboutText += "  - Move or delete original files`r`n"
-    $aboutText += "`r`n"
-    $aboutText += "[Security - X97M/Laroux Protection]`r`n"
-    $aboutText += "  - Deep scan VBA modules in workbooks`r`n"
-    $aboutText += "  - Detect malicious macros by code content`r`n"
-    $aboutText += "  - Auto-remove infected VBA modules`r`n"
-    $aboutText += "  - Scan XLSTART folders (Office 2007-365)`r`n"
-    $aboutText += "  - Detect 19+ virus file variants`r`n"
-    $aboutText += "  - Detect 21+ malicious module names`r`n"
-    $aboutText += "  - Detect 8+ virus macro functions`r`n"
-    $aboutText += "`r`n"
-    $aboutText += "Reference: gist.github.com/gabceb/954418`r`n"
-    $aboutText += "Virus DB: Microsoft & TrendMicro`r`n"
-    $aboutText += "`r`n"
-    $aboutText += "-----------------------------------------`r`n"
-    $aboutText += "DONATE (Support the developer):`r`n"
-    $aboutText += "-----------------------------------------`r`n"
-    $aboutText += "MB Bank: 0360126996868`r`n"
-    $aboutText += "Name: LE VAN AN`r`n"
-    $aboutText += "`r`n"
-    $aboutText += "Momo: 0976896621`r`n"
-    $aboutText += "-----------------------------------------"
-    [System.Windows.Forms.MessageBox]::Show($aboutText, "About Excel Converter", "OK", "Information")
-})
-
-$chkDeleteOld.Add_CheckedChanged({
-    if ($chkDeleteOld.Checked) {
-        $result = [System.Windows.Forms.MessageBox]::Show(
-            "Warning: This will permanently delete original files!`n`nAre you sure?",
-            "Confirm Delete", "YesNo", "Warning"
-        )
-        if ($result -ne "Yes") {
-            $chkDeleteOld.Checked = $false
-        } else {
-            $chkMoveOld.Checked = $false
-            $chkMoveOld.Enabled = $false
-        }
-    } else {
-        $chkMoveOld.Enabled = $true
-    }
-})
-
-$btnBrowse.Add_Click({
-    $folderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
-    $folderBrowser.Description = "Select folder containing Excel files"
-    $folderBrowser.SelectedPath = $txtPath.Text
-    $folderBrowser.ShowNewFolderButton = $true
-    if ($folderBrowser.ShowDialog() -eq "OK") {
-        $txtPath.Text = $folderBrowser.SelectedPath
-        Write-Log "Selected folder: $($folderBrowser.SelectedPath)"
-    }
-})
-
-$btnConvert.Add_Click({
-    $folderPath = $txtPath.Text.Trim()
-    
-    if ([string]::IsNullOrEmpty($folderPath)) {
-        [System.Windows.Forms.MessageBox]::Show("Please select a folder!", "Error", "OK", "Error")
-        return
-    }
-    
-    if (-not (Test-Path $folderPath)) {
-        [System.Windows.Forms.MessageBox]::Show("Folder does not exist!", "Error", "OK", "Error")
-        return
-    }
-    
-    $txtLog.Clear()
-    Set-Status "Scanning..." "Working"
-    Write-Log "Scanning folder: $folderPath"
-    
-    # Check for X97M_LAROUX virus before starting
-    Write-Log "Scanning for X97M/Laroux virus variants..."
-    Write-Log "Checking XLSTART folders for infected files..."
-    $virusFound = Remove-X97MLarouxVirus
-    if ($virusFound) {
-        Write-Log "[SECURITY] X97M/Laroux virus files removed!"
-        [System.Windows.Forms.MessageBox]::Show(
-            "X97M/Laroux virus detected and removed!`n`nInfected files found in Excel XLSTART folder(s).`n`nKnown variants: PERSONAL.XLS, VERA.XLS, PLDT.XLS, STARTUP.XLS, BOOK1.XLS, etc.",
-            "Virus Removed", "OK", "Warning"
-        )
-    } else {
-        Write-Log "No virus files found in XLSTART folders"
-    }
-    
-    try {
-        if ($chkRecursive.Checked) {
-            $xlsFiles = @(Get-ChildItem -Path $folderPath -File -Recurse -ErrorAction Stop | 
-                Where-Object { $_.Extension -eq ".xls" -or $_.Extension -eq ".xlsm" })
-        } else {
-            $xlsFiles = @(Get-ChildItem -Path $folderPath -File -ErrorAction Stop | 
-                Where-Object { $_.Extension -eq ".xls" -or $_.Extension -eq ".xlsm" })
-        }
-    }
-    catch {
-        Write-Log "Error: $($_.Exception.Message)"
-        Set-Status "Error" "Error"
-        return
-    }
-    
-    if ($xlsFiles.Count -eq 0) {
-        Write-Log "No XLS/XLSM files found!"
-        Set-Status "No files found" "Error"
-        [System.Windows.Forms.MessageBox]::Show("No .xls or .xlsm files found!", "Info", "OK", "Information")
-        return
-    }
-    
-    Write-Log "Found $($xlsFiles.Count) file(s)"
-    
-    $btnConvert.Enabled = $false
-    $btnBrowse.Enabled = $false
-    $progressBar.Value = 0
-    $progressBar.Maximum = $xlsFiles.Count
-    
-    $objExcel = $null
-    
-    try {
-        Set-Status "Starting Excel..." "Working"
-        Write-Log "Initializing Excel..."
-        $objExcel = New-Object -ComObject Excel.Application -ErrorAction Stop
-        $objExcel.Visible = $chkShowExcel.Checked
-        $objExcel.DisplayAlerts = $false
-        Write-Log "Excel ready"
-        
-        $xlOpenXMLWorkbook = 51
-        $converted = 0
-        $failed = 0
-        
-        foreach ($file in $xlsFiles) {
-            $current = $progressBar.Value + 1
-            Set-Status "Converting $current of $($xlsFiles.Count)..." "Working"
-            
+$btnScanXLStart.Add_Click({
+        # Launch XLSStart Cleaner tool
+        $cleanerPath = Join-Path $PSScriptRoot "XLSStartCleaner.ps1"
+        if (Test-Path $cleanerPath) {
             try {
-                Write-Log "Converting: $($file.Name)"
-                
-                # Check if file name matches known virus file names
-                if (Test-X97MLaroux -FilePath $file.FullName) {
-                    Write-Log "  [VIRUS] Detected X97M/Laroux infected file!"
-                    try {
-                        Remove-Item $file.FullName -Force
-                        Write-Log "  [VIRUS] Deleted infected file"
-                    } catch {
-                        Write-Log "  [VIRUS] Could not delete - file in use"
-                    }
-                    $failed++
-                    $progressBar.Value++
-                    [System.Windows.Forms.Application]::DoEvents()
-                    continue
-                }
-                
-                $doc = $objExcel.WorkBooks.Open($file.FullName)
-                
-                # Deep scan workbook for virus modules and macros
-                $virusScan = Test-WorkbookForVirus -Workbook $doc
-                if ($virusScan.Infected) {
-                    Write-Log "  [VIRUS] Found infected modules: $($virusScan.Modules -join ', ')"
-                    $removedMacros = Remove-VirusFromWorkbook -Workbook $doc
-                    if ($removedMacros -gt 0) {
-                        Write-Log "  [VIRUS] Cleaned $removedMacros malicious module(s)"
-                    }
-                }
-                
-                $newPath = Join-Path $file.Directory "$($file.BaseName).xlsx"
-                
-                if (Test-Path $newPath) {
-                    $newPath = Join-Path $file.Directory "$($file.BaseName)_converted.xlsx"
-                }
-                
-                $doc.SaveAs($newPath, $xlOpenXMLWorkbook)
-                $doc.Close($false)
-                
-                # Handle original file
-                if ($chkDeleteOld.Checked) {
-                    Remove-Item $file.FullName -Force
-                    Write-Log "  Deleted original"
-                } elseif ($chkMoveOld.Checked) {
-                    $oldFolder = Join-Path $file.Directory "old"
-                    if (-not (Test-Path $oldFolder)) {
-                        New-Item $oldFolder -ItemType Directory -Force | Out-Null
-                    }
-                    Move-Item $file.FullName $oldFolder -Force
-                    Write-Log "  Moved to old folder"
-                }
-                
-                Write-Log "  OK -> $($file.BaseName).xlsx"
-                $converted++
+                Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -File `"$cleanerPath`"" -WindowStyle Hidden
             }
             catch {
-                Write-Log "  ERROR: $($_.Exception.Message)"
-                $failed++
-                try { $doc.Close($false) } catch {}
+                [System.Windows.Forms.MessageBox]::Show(
+                    "Could not launch XLSStart Cleaner.`n`nError: $($_.Exception.Message)",
+                    "Error", "OK", "Error"
+                )
             }
+        }
+        else {
+            [System.Windows.Forms.MessageBox]::Show(
+                "XLSStartCleaner.ps1 not found!`n`nExpected location: $cleanerPath",
+                "Error", "OK", "Error"
+            )
+        }
+    })
+
+$btnAbout.Add_Click({
+        $aboutText = "EXCEL CONVERTER v1.0.0`r`n"
+        $aboutText += "Author: Le An (Vietnam IT)`r`n"
+        $aboutText += "`r`n"
+        $aboutText += "FEATURES:`r`n"
+        $aboutText += "-----------------------------------------`r`n"
+        $aboutText += "[Conversion]`r`n"
+        $aboutText += "  - Convert XLS (Excel 97-2003) to XLSX`r`n"
+        $aboutText += "  - Convert XLSM (Macro-enabled) to XLSX`r`n"
+        $aboutText += "  - Batch convert folders with subfolders`r`n"
+        $aboutText += "  - Move or delete original files`r`n"
+        $aboutText += "`r`n"
+        $aboutText += "[Security - X97M/Laroux Protection]`r`n"
+        $aboutText += "  - Deep scan VBA modules in workbooks`r`n"
+        $aboutText += "  - Detect malicious macros by code content`r`n"
+        $aboutText += "  - Auto-remove infected VBA modules`r`n"
+        $aboutText += "  - Scan XLSTART folders (Office 2007-365)`r`n"
+        $aboutText += "  - Detect 19+ virus file variants`r`n"
+        $aboutText += "  - Detect 21+ malicious module names`r`n"
+        $aboutText += "  - Detect 8+ virus macro functions`r`n"
+        $aboutText += "`r`n"
+        $aboutText += "Reference: gist.github.com/gabceb/954418`r`n"
+        $aboutText += "Virus DB: Microsoft & TrendMicro`r`n"
+        $aboutText += "`r`n"
+        $aboutText += "-----------------------------------------`r`n"
+        $aboutText += "DONATE (Support the developer):`r`n"
+        $aboutText += "-----------------------------------------`r`n"
+        $aboutText += "MB Bank: 0360126996868`r`n"
+        $aboutText += "Name: LE VAN AN`r`n"
+        $aboutText += "`r`n"
+        $aboutText += "Momo: 0976896621`r`n"
+        $aboutText += "-----------------------------------------"
+        [System.Windows.Forms.MessageBox]::Show($aboutText, "About Excel Converter", "OK", "Information")
+    })
+
+$chkDeleteOld.Add_CheckedChanged({
+        if ($chkDeleteOld.Checked) {
+            $result = [System.Windows.Forms.MessageBox]::Show(
+                "Warning: This will permanently delete original files!`n`nAre you sure?",
+                "Confirm Delete", "YesNo", "Warning"
+            )
+            if ($result -ne "Yes") {
+                $chkDeleteOld.Checked = $false
+            }
+            else {
+                $chkMoveOld.Checked = $false
+                $chkMoveOld.Enabled = $false
+            }
+        }
+        else {
+            $chkMoveOld.Enabled = $true
+        }
+    })
+
+$btnBrowse.Add_Click({
+        $folderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
+        $folderBrowser.Description = "Select folder containing Excel files"
+        $folderBrowser.SelectedPath = $txtPath.Text
+        $folderBrowser.ShowNewFolderButton = $true
+        if ($folderBrowser.ShowDialog() -eq "OK") {
+            $txtPath.Text = $folderBrowser.SelectedPath
+            Write-Log "Selected folder: $($folderBrowser.SelectedPath)"
+        }
+    })
+
+$btnConvert.Add_Click({
+        $folderPath = $txtPath.Text.Trim()
+    
+        if ([string]::IsNullOrEmpty($folderPath)) {
+            [System.Windows.Forms.MessageBox]::Show("Please select a folder!", "Error", "OK", "Error")
+            return
+        }
+    
+        if (-not (Test-Path $folderPath)) {
+            [System.Windows.Forms.MessageBox]::Show("Folder does not exist!", "Error", "OK", "Error")
+            return
+        }
+    
+        $txtLog.Clear()
+        Set-Status "Scanning..." "Working"
+        Write-Log "Scanning folder: $folderPath"
+    
+        # Check for X97M_LAROUX virus before starting
+        Write-Log "Scanning for X97M/Laroux virus variants..."
+        Write-Log "Checking XLSTART folders for infected files..."
+        $virusFound = Remove-X97MLarouxVirus
+        if ($virusFound) {
+            Write-Log "[SECURITY] X97M/Laroux virus files removed!"
+            [System.Windows.Forms.MessageBox]::Show(
+                "X97M/Laroux virus detected and removed!`n`nInfected files found in Excel XLSTART folder(s).`n`nKnown variants: PERSONAL.XLS, VERA.XLS, PLDT.XLS, STARTUP.XLS, BOOK1.XLS, etc.",
+                "Virus Removed", "OK", "Warning"
+            )
+        }
+        else {
+            Write-Log "No virus files found in XLSTART folders"
+        }
+    
+        try {
+            if ($chkRecursive.Checked) {
+                $xlsFiles = @(Get-ChildItem -Path $folderPath -File -Recurse -ErrorAction Stop | 
+                    Where-Object { $_.Extension -eq ".xls" -or $_.Extension -eq ".xlsm" })
+            }
+            else {
+                $xlsFiles = @(Get-ChildItem -Path $folderPath -File -ErrorAction Stop | 
+                    Where-Object { $_.Extension -eq ".xls" -or $_.Extension -eq ".xlsm" })
+            }
+        }
+        catch {
+            Write-Log "Error: $($_.Exception.Message)"
+            Set-Status "Error" "Error"
+            return
+        }
+    
+        if ($xlsFiles.Count -eq 0) {
+            Write-Log "No XLS/XLSM files found!"
+            Set-Status "No files found" "Error"
+            [System.Windows.Forms.MessageBox]::Show("No .xls or .xlsm files found!", "Info", "OK", "Information")
+            return
+        }
+    
+        Write-Log "Found $($xlsFiles.Count) file(s)"
+    
+        $btnConvert.Enabled = $false
+        $btnBrowse.Enabled = $false
+        $progressBar.Value = 0
+        $progressBar.Maximum = $xlsFiles.Count
+    
+        $objExcel = $null
+    
+        try {
+            Set-Status "Starting Excel..." "Working"
+            Write-Log "Initializing Excel..."
+            $objExcel = New-Object -ComObject Excel.Application -ErrorAction Stop
+            $objExcel.Visible = $chkShowExcel.Checked
+            $objExcel.DisplayAlerts = $false
+            Write-Log "Excel ready"
+        
+            $xlOpenXMLWorkbook = 51
+            $converted = 0
+            $failed = 0
+        
+            foreach ($file in $xlsFiles) {
+                $current = $progressBar.Value + 1
+                Set-Status "Converting $current of $($xlsFiles.Count)..." "Working"
             
-            $progressBar.Value++
-            [System.Windows.Forms.Application]::DoEvents()
+                try {
+                    Write-Log "Converting: $($file.Name)"
+                
+                    # Check if file name matches known virus file names
+                    if (Test-X97MLaroux -FilePath $file.FullName) {
+                        Write-Log "  [VIRUS] Detected X97M/Laroux infected file!"
+                        try {
+                            Remove-Item $file.FullName -Force
+                            Write-Log "  [VIRUS] Deleted infected file"
+                        }
+                        catch {
+                            Write-Log "  [VIRUS] Could not delete - file in use"
+                        }
+                        $failed++
+                        $progressBar.Value++
+                        [System.Windows.Forms.Application]::DoEvents()
+                        continue
+                    }
+                
+                    $doc = $objExcel.WorkBooks.Open($file.FullName)
+                
+                    # Deep scan workbook for virus modules and macros
+                    $virusScan = Test-WorkbookForVirus -Workbook $doc
+                    if ($virusScan.Infected) {
+                        Write-Log "  [VIRUS] Found infected modules: $($virusScan.Modules -join ', ')"
+                        $removedMacros = Remove-VirusFromWorkbook -Workbook $doc
+                        if ($removedMacros -gt 0) {
+                            Write-Log "  [VIRUS] Cleaned $removedMacros malicious module(s)"
+                        }
+                    }
+                
+                    $newPath = Join-Path $file.Directory "$($file.BaseName).xlsx"
+                
+                    if (Test-Path $newPath) {
+                        $newPath = Join-Path $file.Directory "$($file.BaseName)_converted.xlsx"
+                    }
+                
+                    $doc.SaveAs($newPath, $xlOpenXMLWorkbook)
+                    $doc.Close($false)
+                
+                    # Handle original file
+                    if ($chkDeleteOld.Checked) {
+                        Remove-Item $file.FullName -Force
+                        Write-Log "  Deleted original"
+                    }
+                    elseif ($chkMoveOld.Checked) {
+                        $oldFolder = Join-Path $file.Directory "old"
+                        if (-not (Test-Path $oldFolder)) {
+                            New-Item $oldFolder -ItemType Directory -Force | Out-Null
+                        }
+                        Move-Item $file.FullName $oldFolder -Force
+                        Write-Log "  Moved to old folder"
+                    }
+                
+                    Write-Log "  OK -> $($file.BaseName).xlsx"
+                    $converted++
+                }
+                catch {
+                    Write-Log "  ERROR: $($_.Exception.Message)"
+                    $failed++
+                    try { $doc.Close($false) } catch {}
+                }
+            
+                $progressBar.Value++
+                [System.Windows.Forms.Application]::DoEvents()
+            }
+        
+            Write-Log "=========================================="
+            Write-Log "Completed! Success: $converted, Failed: $failed"
+        
+            # Final virus check after conversion
+            Write-Log "Final security scan..."
+            $finalVirusCheck = Remove-X97MLarouxVirus
+            if ($finalVirusCheck) {
+                Write-Log "[SECURITY] Additional virus files removed after conversion"
+            }
+        
+            Set-Status "Done: $converted OK, $failed failed" "Success"
+        
+            [System.Windows.Forms.MessageBox]::Show(
+                "Conversion completed!`n`nSuccess: $converted`nFailed: $failed", 
+                "Result", "OK", "Information"
+            )
         }
-        
-        Write-Log "=========================================="
-        Write-Log "Completed! Success: $converted, Failed: $failed"
-        
-        # Final virus check after conversion
-        Write-Log "Final security scan..."
-        $finalVirusCheck = Remove-X97MLarouxVirus
-        if ($finalVirusCheck) {
-            Write-Log "[SECURITY] Additional virus files removed after conversion"
+        catch {
+            Write-Log "CRITICAL ERROR: $($_.Exception.Message)"
+            Set-Status "Error occurred" "Error"
+            [System.Windows.Forms.MessageBox]::Show(
+                "Error: $($_.Exception.Message)`n`nMake sure Microsoft Excel is installed.", 
+                "Error", "OK", "Error"
+            )
         }
+        finally {
+            if ($objExcel) {
+                try {
+                    $objExcel.Quit()
+                    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($objExcel) | Out-Null
+                }
+                catch {}
+                $objExcel = $null
+            }
+            [GC]::Collect()
+            [GC]::WaitForPendingFinalizers()
         
-        Set-Status "Done: $converted OK, $failed failed" "Success"
-        
-        [System.Windows.Forms.MessageBox]::Show(
-            "Conversion completed!`n`nSuccess: $converted`nFailed: $failed", 
-            "Result", "OK", "Information"
-        )
-    }
-    catch {
-        Write-Log "CRITICAL ERROR: $($_.Exception.Message)"
-        Set-Status "Error occurred" "Error"
-        [System.Windows.Forms.MessageBox]::Show(
-            "Error: $($_.Exception.Message)`n`nMake sure Microsoft Excel is installed.", 
-            "Error", "OK", "Error"
-        )
-    }
-    finally {
-        if ($objExcel) {
-            try {
-                $objExcel.Quit()
-                [System.Runtime.Interopservices.Marshal]::ReleaseComObject($objExcel) | Out-Null
-            } catch {}
-            $objExcel = $null
+            $btnConvert.Enabled = $true
+            $btnBrowse.Enabled = $true
         }
-        [GC]::Collect()
-        [GC]::WaitForPendingFinalizers()
-        
-        $btnConvert.Enabled = $true
-        $btnBrowse.Enabled = $true
-    }
-})
+    })
 
 # Show form
 $form.Add_Shown({ $form.Activate() })
