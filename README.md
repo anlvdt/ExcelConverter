@@ -141,6 +141,15 @@ auto_open, check_files, ck_files, scan_files, cop, escape, del, back
 
 ---
 
+## Author | Tác giả
+
+**Le Van An** (Vietnam IT)
+
+[![GitHub](https://img.shields.io/badge/GitHub-@anlvdt-181717?logo=github)](https://github.com/anlvdt)
+[![Facebook](https://img.shields.io/badge/Facebook-Laptop%20Le%20An-1877F2?logo=facebook&logoColor=white)](https://www.facebook.com/laptopleandotcom)
+
+---
+
 ## Donate | Ủng hộ
 
 If you find this tool useful, please consider supporting the developer.
@@ -149,8 +158,16 @@ Nếu bạn thấy công cụ này hữu ích, hãy cân nhắc ủng hộ tác 
 
 | Method | Account | Name |
 |--------|---------|------|
-| MB Bank | `0360126996868` | LE VAN AN |
-| Momo | `0976896621` | LE VAN AN |
+| **MB Bank** | `0360126996868` | LE VAN AN |
+| **Momo** | `0976896621` | LE VAN AN |
+
+### Support via Shopee | Hỗ trợ qua Shopee
+
+You can also support by visiting the Shopee store (no purchase required):
+
+Bạn cũng có thể hỗ trợ bằng cách ghé thăm gian hàng Shopee (không cần mua hàng):
+
+🛒 **[Visit Laptop Le An Store](https://collshp.com/laptopleandotcom?view=storefront)**
 
 ---
 
