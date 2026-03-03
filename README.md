@@ -138,47 +138,42 @@ auto_open, check_files, ck_files, scan_files, cop, escape, del, back
 - Original conversion script: [gist.github.com/gabceb/954418](https://gist.github.com/gabceb/954418)
 - Microsoft Threat Encyclopedia: [X97M/Laroux](https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Virus:X97M/Laroux)
 - TrendMicro Threat Database: [X97M_LAROUX](https://www.trendmicro.com/vinfo/us/threat-encyclopedia/malware/X97M_LAROUX.RR)
-
 ---
 
-## Author | Tác giả
+## Tác giả
 
 **Le Van An** (Vietnam IT)
 
-[![GitHub](https://img.shields.io/badge/GitHub-@anlvdt-181717?style=for-the-badge&logo=github)](https://github.com/anlvdt)
-[![Facebook](https://img.shields.io/badge/Facebook-Laptop%20Le%20An-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/laptopleandotcom)
+[![GitHub](https://img.shields.io/badge/GitHub-anlvdt-181717?style=for-the-badge&logo=github)](https://github.com/anlvdt)
+
+## Ủng hộ dự án
+
+Nếu bạn thấy dự án hữu ích, hãy cân nhắc ủng hộ tác giả.
+
+### Chuyển khoản
+
+| Phương thức | Số tài khoản | Chủ tài khoản |
+|------------|-------------|---------------|
+| MB Bank | `0360126996868` | LE VAN AN |
+| Momo | `0976896621` | LE VAN AN |
+
+### Shopee Affiliate
+
+Mình làm Affiliate Shopee, nếu thấy sản phẩm hữu ích hãy ủng hộ mình một click nhé. Chỉ cần click không cần mua cũng được!
+
+[![Shopee](https://img.shields.io/badge/Shopee-EE4D2D?style=for-the-badge&logo=shopee&logoColor=white)](https://s.shopee.vn/7AYWh5NzOB)
+
+**[Xem sản phẩm trên Shopee](https://s.shopee.vn/7AYWh5NzOB)** — Xin cảm ơn!
+
+### Ủng hộ khác
+
+- Star repo trên GitHub
+- Chia sẻ dự án cho bạn bè, đồng nghiệp
+- Báo bug hoặc đề xuất tính năng mới qua Issues
+- Đóng góp code qua Pull Requests
 
 ---
 
-## Donate | Ủng hộ
+## License
 
-If you find this tool useful, please consider supporting the developer.
-
-Nếu bạn thấy công cụ này hữu ích, hãy cân nhắc ủng hộ tác giả.
-
-| Method | Account | Name |
-|--------|---------|------|
-| **MB Bank** | `0360126996868` | LE VAN AN |
-| **Momo** | `0976896621` | LE VAN AN |
-
-[![Sponsor](https://img.shields.io/badge/Sponsor-EA4AAA?style=for-the-badge&logo=github-sponsors&logoColor=white)](https://github.com/sponsors/anlvdt)
-[![Shopee](https://img.shields.io/badge/Shopee-EE4D2D?style=for-the-badge&logo=shopee&logoColor=white)](https://collshp.com/laptopleandotcom?view=storefront)
-
----
-
-## License | Giấy phép
-
-MIT License
-
-Copyright (c) 2026 Le An (Vietnam IT)
-
----
-
-## Changelog | Lịch sử thay đổi
-
-### v1.0.0 (January 2026)
-- Initial release | Phiên bản đầu tiên
-- XLS/XLSM to XLSX conversion | Chuyển đổi XLS/XLSM sang XLSX
-- X97M/Laroux virus protection | Bảo vệ virus X97M/Laroux
-- Deep VBA module scanning | Quét sâu VBA module
-- Batch folder conversion | Chuyển đổi hàng loạt thư mục
+MIT License — Copyright (c) 2026 Le An (Vietnam IT)
