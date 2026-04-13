@@ -3,7 +3,7 @@
 # Professional GUI Application with Virus Protection
 #
 # Author: Le An (Vietnam IT)
-# Version: 1.0.0
+# Version: 1.1.0
 # Date: January 2026
 #
 # FEATURES:
@@ -60,7 +60,8 @@ $subtextColor = [System.Drawing.Color]::FromArgb(100, 100, 100)
 # Create main form
 $form = New-Object System.Windows.Forms.Form
 $form.Text = "Excel Converter"
-$form.Size = New-Object System.Drawing.Size(700, 590)
+$form.Size = New-Object System.Drawing.Size(700, 640)
+$form.AllowDrop = $true
 $form.StartPosition = "CenterScreen"
 $form.FormBorderStyle = "FixedSingle"
 $form.MaximizeBox = $false
@@ -118,43 +119,58 @@ $btnAbout.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.
 $btnAbout.Cursor = "Hand"
 $pnlHeader.Controls.Add($btnAbout)
 
-# Folder Selection Card
-$pnlFolder = New-Object System.Windows.Forms.Panel
-$pnlFolder.Location = New-Object System.Drawing.Point(20, 95)
-$pnlFolder.Size = New-Object System.Drawing.Size(645, 90)
-$pnlFolder.BackColor = $cardColor
-$form.Controls.Add($pnlFolder)
+# Global cancel variable
+$script:cancelProcessing = $false
 
-$lblFolderTitle = New-Object System.Windows.Forms.Label
-$lblFolderTitle.Text = "Source Folder"
-$lblFolderTitle.Location = New-Object System.Drawing.Point(15, 12)
-$lblFolderTitle.Size = New-Object System.Drawing.Size(200, 20)
-$lblFolderTitle.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-$lblFolderTitle.ForeColor = $textColor
-$pnlFolder.Controls.Add($lblFolderTitle)
+# Folder Queue Card
+$pnlQueue = New-Object System.Windows.Forms.Panel
+$pnlQueue.Location = New-Object System.Drawing.Point(20, 95)
+$pnlQueue.Size = New-Object System.Drawing.Size(645, 140)
+$pnlQueue.BackColor = $cardColor
+$form.Controls.Add($pnlQueue)
 
-$txtPath = New-Object System.Windows.Forms.TextBox
-$txtPath.Location = New-Object System.Drawing.Point(15, 40)
-$txtPath.Size = New-Object System.Drawing.Size(510, 30)
-$txtPath.Font = New-Object System.Drawing.Font("Segoe UI", 10)
-$txtPath.Text = [Environment]::GetFolderPath("MyDocuments")
-$txtPath.BorderStyle = "FixedSingle"
-$pnlFolder.Controls.Add($txtPath)
+$lblQueueTitle = New-Object System.Windows.Forms.Label
+$lblQueueTitle.Text = "Batch Queue (Drag & Drop folders/files here)"
+$lblQueueTitle.Location = New-Object System.Drawing.Point(15, 12)
+$lblQueueTitle.Size = New-Object System.Drawing.Size(400, 20)
+$lblQueueTitle.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$lblQueueTitle.ForeColor = $textColor
+$pnlQueue.Controls.Add($lblQueueTitle)
 
-$btnBrowse = New-Object System.Windows.Forms.Button
-$btnBrowse.Text = "Browse..."
-$btnBrowse.Location = New-Object System.Drawing.Point(535, 38)
-$btnBrowse.Size = New-Object System.Drawing.Size(95, 32)
-$btnBrowse.FlatStyle = "Flat"
-$btnBrowse.BackColor = $primaryColor
-$btnBrowse.ForeColor = [System.Drawing.Color]::White
-$btnBrowse.FlatAppearance.BorderSize = 0
-$btnBrowse.Cursor = "Hand"
-$pnlFolder.Controls.Add($btnBrowse)
+$lstQueue = New-Object System.Windows.Forms.ListBox
+$lstQueue.Location = New-Object System.Drawing.Point(15, 38)
+$lstQueue.Size = New-Object System.Drawing.Size(510, 85)
+$lstQueue.Font = New-Object System.Drawing.Font("Segoe UI", 9)
+$lstQueue.BorderStyle = "FixedSingle"
+$lstQueue.AllowDrop = $true
+$lstQueue.SelectionMode = "MultiExtended"
+$pnlQueue.Controls.Add($lstQueue)
+
+$btnQueueAdd = New-Object System.Windows.Forms.Button
+$btnQueueAdd.Text = "Add Folder"
+$btnQueueAdd.Location = New-Object System.Drawing.Point(535, 38)
+$btnQueueAdd.Size = New-Object System.Drawing.Size(95, 32)
+$btnQueueAdd.FlatStyle = "Flat"
+$btnQueueAdd.BackColor = $primaryColor
+$btnQueueAdd.ForeColor = [System.Drawing.Color]::White
+$btnQueueAdd.FlatAppearance.BorderSize = 0
+$btnQueueAdd.Cursor = "Hand"
+$pnlQueue.Controls.Add($btnQueueAdd)
+
+$btnQueueClear = New-Object System.Windows.Forms.Button
+$btnQueueClear.Text = "Clear List"
+$btnQueueClear.Location = New-Object System.Drawing.Point(535, 78)
+$btnQueueClear.Size = New-Object System.Drawing.Size(95, 32)
+$btnQueueClear.FlatStyle = "Flat"
+$btnQueueClear.BackColor = [System.Drawing.Color]::FromArgb(230,230,230)
+$btnQueueClear.ForeColor = $textColor
+$btnQueueClear.FlatAppearance.BorderSize = 0
+$btnQueueClear.Cursor = "Hand"
+$pnlQueue.Controls.Add($btnQueueClear)
 
 # Options Card
 $pnlOptions = New-Object System.Windows.Forms.Panel
-$pnlOptions.Location = New-Object System.Drawing.Point(20, 195)
+$pnlOptions.Location = New-Object System.Drawing.Point(20, 245)
 $pnlOptions.Size = New-Object System.Drawing.Size(645, 100)
 $pnlOptions.BackColor = $cardColor
 $form.Controls.Add($pnlOptions)
@@ -205,7 +221,7 @@ $pnlOptions.Controls.Add($chkDeleteOld)
 
 # Log Card
 $pnlLog = New-Object System.Windows.Forms.Panel
-$pnlLog.Location = New-Object System.Drawing.Point(20, 305)
+$pnlLog.Location = New-Object System.Drawing.Point(20, 355)
 $pnlLog.Size = New-Object System.Drawing.Size(645, 175)
 $pnlLog.BackColor = $cardColor
 $form.Controls.Add($pnlLog)
@@ -232,7 +248,7 @@ $pnlLog.Controls.Add($txtLog)
 
 # Status Bar
 $pnlStatus = New-Object System.Windows.Forms.Panel
-$pnlStatus.Location = New-Object System.Drawing.Point(20, 490)
+$pnlStatus.Location = New-Object System.Drawing.Point(20, 540)
 $pnlStatus.Size = New-Object System.Drawing.Size(645, 40)
 $pnlStatus.BackColor = $cardColor
 $form.Controls.Add($pnlStatus)
@@ -247,7 +263,7 @@ $pnlStatus.Controls.Add($lblStatus)
 
 $progressBar = New-Object System.Windows.Forms.ProgressBar
 $progressBar.Location = New-Object System.Drawing.Point(170, 8)
-$progressBar.Size = New-Object System.Drawing.Size(350, 22)
+$progressBar.Size = New-Object System.Drawing.Size(255, 22)
 $progressBar.Style = "Continuous"
 $pnlStatus.Controls.Add($progressBar)
 
@@ -263,10 +279,23 @@ $btnConvert.FlatAppearance.BorderSize = 0
 $btnConvert.Cursor = "Hand"
 $pnlStatus.Controls.Add($btnConvert)
 
+$btnCancel = New-Object System.Windows.Forms.Button
+$btnCancel.Text = "CANCEL"
+$btnCancel.Location = New-Object System.Drawing.Point(435, 5)
+$btnCancel.Size = New-Object System.Drawing.Size(95, 30)
+$btnCancel.Font = New-Object System.Drawing.Font("Segoe UI", 9, [System.Drawing.FontStyle]::Bold)
+$btnCancel.BackColor = $errorColor
+$btnCancel.ForeColor = [System.Drawing.Color]::White
+$btnCancel.FlatStyle = "Flat"
+$btnCancel.FlatAppearance.BorderSize = 0
+$btnCancel.Cursor = "Hand"
+$btnCancel.Enabled = $false
+$pnlStatus.Controls.Add($btnCancel)
+
 # Footer with author info
 $lblFooter = New-Object System.Windows.Forms.Label
-$lblFooter.Text = "v1.0.0 | Le An (Vietnam IT) | Ref: gist.github.com/gabceb/954418"
-$lblFooter.Location = New-Object System.Drawing.Point(20, 538)
+$lblFooter.Text = "v1.1.0 | Le An (Vietnam IT) | Ref: gist.github.com/gabceb/954418"
+$lblFooter.Location = New-Object System.Drawing.Point(20, 588)
 $lblFooter.Size = New-Object System.Drawing.Size(645, 18)
 $lblFooter.Font = New-Object System.Drawing.Font("Segoe UI", 8)
 $lblFooter.ForeColor = $subtextColor
@@ -359,6 +388,10 @@ function Remove-X97MLarouxVirus {
             # Get all xls/xlsm files in XLSTART
             $xlsFiles = Get-ChildItem -Path $xlstartPath -Include "*.xls", "*.xlsm", "*.xla", "*.xlam" -File -ErrorAction SilentlyContinue
             foreach ($file in $xlsFiles) {
+                if ($script:cancelProcessing -eq $true) {
+                    Write-Log "PROCESS CANCELED BY USER!"
+                    break
+                }
                 $isVirus = $false
                 
                 # Check if filename matches known virus names (case-insensitive)
@@ -556,7 +589,7 @@ $btnScanXLStart.Add_Click({
     })
 
 $btnAbout.Add_Click({
-        $aboutText = "EXCEL CONVERTER v1.0.0`r`n"
+        $aboutText = "EXCEL CONVERTER v1.1.0`r`n"
         $aboutText += "Author: Le An (Vietnam IT)`r`n"
         $aboutText += "`r`n"
         $aboutText += "FEATURES:`r`n"
@@ -609,33 +642,80 @@ $chkDeleteOld.Add_CheckedChanged({
         }
     })
 
-$btnBrowse.Add_Click({
+$lstQueue.Add_DragEnter({
+        if ($_.Data.GetDataPresent([System.Windows.Forms.DataFormats]::FileDrop)) {
+            $_.Effect = [System.Windows.Forms.DragDropEffects]::Copy
+        }
+    })
+
+    $lstQueue.Add_DragDrop({
+        $files = $_.Data.GetData([System.Windows.Forms.DataFormats]::FileDrop)
+        foreach ($f in $files) {
+            if (-not $lstQueue.Items.Contains($f)) {
+                $lstQueue.Items.Add($f) | Out-Null
+            }
+        }
+    })
+
+    $form.Add_DragEnter({
+        if ($_.Data.GetDataPresent([System.Windows.Forms.DataFormats]::FileDrop)) {
+            $_.Effect = [System.Windows.Forms.DragDropEffects]::Copy
+        }
+    })
+
+    $form.Add_DragDrop({
+        $files = $_.Data.GetData([System.Windows.Forms.DataFormats]::FileDrop)
+        foreach ($f in $files) {
+            if (-not $lstQueue.Items.Contains($f)) {
+                $lstQueue.Items.Add($f) | Out-Null
+            }
+        }
+    })
+
+    $btnQueueAdd.Add_Click({
         $folderBrowser = New-Object System.Windows.Forms.FolderBrowserDialog
-        $folderBrowser.Description = "Select folder containing Excel files"
-        $folderBrowser.SelectedPath = $txtPath.Text
+        $folderBrowser.Description = "Select a folder to add to queue"
         $folderBrowser.ShowNewFolderButton = $true
         if ($folderBrowser.ShowDialog() -eq "OK") {
-            $txtPath.Text = $folderBrowser.SelectedPath
-            Write-Log "Selected folder: $($folderBrowser.SelectedPath)"
+            if (-not $lstQueue.Items.Contains($folderBrowser.SelectedPath)) {
+                $lstQueue.Items.Add($folderBrowser.SelectedPath) | Out-Null
+            }
+        }
+    })
+
+    $btnQueueClear.Add_Click({
+        $lstQueue.Items.Clear()
+    })
+
+    $btnCancel.Add_Click({
+        if ($btnConvert.Enabled -eq $false -and $btnCancel.Enabled -eq $true) {
+            $result = [System.Windows.Forms.MessageBox]::Show(
+                "Are you sure you want to cancel processing?",
+                "Cancel Confirm", "YesNo", "Warning"
+            )
+            if ($result -eq "Yes") {
+                $script:cancelProcessing = $true
+                Set-Status "Canceling... please wait." "Error"
+            }
         }
     })
 
 $btnConvert.Add_Click({
-        $folderPath = $txtPath.Text.Trim()
-    
-        if ([string]::IsNullOrEmpty($folderPath)) {
-            [System.Windows.Forms.MessageBox]::Show("Please select a folder!", "Error", "OK", "Error")
+        if ($lstQueue.Items.Count -eq 0) {
+            [System.Windows.Forms.MessageBox]::Show("Please add folders or files to the queue!", "Error", "OK", "Error")
             return
         }
     
-        if (-not (Test-Path $folderPath)) {
-            [System.Windows.Forms.MessageBox]::Show("Folder does not exist!", "Error", "OK", "Error")
-            return
-        }
-    
+        $script:cancelProcessing = $false
         $txtLog.Clear()
-        Set-Status "Scanning..." "Working"
-        Write-Log "Scanning folder: $folderPath"
+        
+        $btnConvert.Enabled = $false
+        $btnQueueAdd.Enabled = $false
+        $btnQueueClear.Enabled = $false
+        $btnCancel.Enabled = $true
+        
+        Set-Status "Scanning queue..." "Working"
+        Write-Log "Scanning items in queue..."
     
         # Check for X97M_LAROUX virus before starting
         Write-Log "Scanning for X97M/Laroux virus variants..."
@@ -652,33 +732,49 @@ $btnConvert.Add_Click({
             Write-Log "No virus files found in XLSTART folders"
         }
     
+        $xlsFiles = @()
         try {
-            if ($chkRecursive.Checked) {
-                $xlsFiles = @(Get-ChildItem -Path $folderPath -File -Recurse -ErrorAction Stop | 
-                    Where-Object { $_.Extension -eq ".xls" -or $_.Extension -eq ".xlsm" })
+            foreach ($item in $lstQueue.Items) {
+                if (-not (Test-Path $item)) { continue }
+                $itemObj = Get-Item $item
+                if ($itemObj.PSIsContainer) {
+                    if ($chkRecursive.Checked) {
+                        $xlsFiles += @(Get-ChildItem -Path $item -File -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Extension -eq ".xls" -or $_.Extension -eq ".xlsm" })
+                    } else {
+                        $xlsFiles += @(Get-ChildItem -Path $item -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -eq ".xls" -or $_.Extension -eq ".xlsm" })
+                    }
+                } else {
+                    if ($itemObj.Extension -eq ".xls" -or $itemObj.Extension -eq ".xlsm") {
+                        $xlsFiles += $itemObj
+                    }
+                }
             }
-            else {
-                $xlsFiles = @(Get-ChildItem -Path $folderPath -File -ErrorAction Stop | 
-                    Where-Object { $_.Extension -eq ".xls" -or $_.Extension -eq ".xlsm" })
-            }
+            # Deduplicate
+            $xlsFiles = $xlsFiles | Select-Object -Unique -Property FullName
         }
         catch {
-            Write-Log "Error: $($_.Exception.Message)"
+            Write-Log "Error scanning files: $($_.Exception.Message)"
             Set-Status "Error" "Error"
+            $btnConvert.Enabled = $true
+            $btnQueueAdd.Enabled = $true
+            $btnQueueClear.Enabled = $true
+            $btnCancel.Enabled = $false
             return
         }
     
         if ($xlsFiles.Count -eq 0) {
-            Write-Log "No XLS/XLSM files found!"
+            Write-Log "No XLS/XLSM files found in queue!"
             Set-Status "No files found" "Error"
             [System.Windows.Forms.MessageBox]::Show("No .xls or .xlsm files found!", "Info", "OK", "Information")
+            $btnConvert.Enabled = $true
+            $btnQueueAdd.Enabled = $true
+            $btnQueueClear.Enabled = $true
+            $btnCancel.Enabled = $false
             return
         }
     
-        Write-Log "Found $($xlsFiles.Count) file(s)"
+        Write-Log "Found $($xlsFiles.Count) file(s) across batch"
     
-        $btnConvert.Enabled = $false
-        $btnBrowse.Enabled = $false
         $progressBar.Value = 0
         $progressBar.Maximum = $xlsFiles.Count
     
@@ -690,6 +786,7 @@ $btnConvert.Add_Click({
             $objExcel = New-Object -ComObject Excel.Application -ErrorAction Stop
             $objExcel.Visible = $chkShowExcel.Checked
             $objExcel.DisplayAlerts = $false
+            $objExcel.AutomationSecurity = 3 # msoAutomationSecurityForceDisable
             Write-Log "Excel ready"
         
             $xlOpenXMLWorkbook = 51
@@ -697,6 +794,10 @@ $btnConvert.Add_Click({
             $failed = 0
         
             foreach ($file in $xlsFiles) {
+                if ($script:cancelProcessing -eq $true) {
+                    Write-Log "PROCESS CANCELED BY USER!"
+                    break
+                }
                 $current = $progressBar.Value + 1
                 Set-Status "Converting $current of $($xlsFiles.Count)..." "Working"
             
@@ -793,6 +894,11 @@ $btnConvert.Add_Click({
             )
         }
         finally {
+            $btnConvert.Enabled = $true
+            $btnQueueAdd.Enabled = $true
+            $btnQueueClear.Enabled = $true
+            $btnCancel.Enabled = $false
+            
             if ($objExcel) {
                 try {
                     $objExcel.Quit()

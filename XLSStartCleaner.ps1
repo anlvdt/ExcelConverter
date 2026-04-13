@@ -159,6 +159,7 @@ function Test-VirusInWorkbook {
         $objExcel = New-Object -ComObject Excel.Application -ErrorAction Stop
         $objExcel.Visible = $false
         $objExcel.DisplayAlerts = $false
+        $objExcel.AutomationSecurity = 3 # msoAutomationSecurityForceDisable
         
         $doc = $objExcel.Workbooks.Open($FilePath, $null, $true) # Read-only
         

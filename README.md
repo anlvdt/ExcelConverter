@@ -1,4 +1,4 @@
-# Excel Converter v1.0.0
+# Excel Converter v1.1.0
 
 **Convert XLS/XLSM to XLSX with X97M/Laroux Virus Protection**
 
@@ -36,11 +36,10 @@ Author: Le An (Vietnam IT)
 
 ## Usage Guide | Hướng dẫn sử dụng
 
-### Step 1: Select Source Folder | Bước 1: Chọn thư mục nguồn
-- Click **Browse...** button to select folder containing XLS/XLSM files
-- Nhấn nút **Browse...** để chọn thư mục chứa file XLS/XLSM
-
-### Step 2: Configure Options | Bước 2: Cấu hình tùy chọn
+### Step 1: Add to Queue | Bước 1: Thêm vào Danh sách (Queue)
+- Drag and drop folders or files directly into the Batch Queue, or click **Add Folder**.
+- Kéo thả trực tiếp thư mục/file vào ô Batch Queue, hoặc nhấn **Add Folder**.
+- Use **Clear List** to empty the queue for a new batch | Nhấn **Clear List** để làm trống danh sách nếu muốn chạy mẻ (batch) mới.
 
 | Option | Description | Mô tả |
 |--------|-------------|-------|

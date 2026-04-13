@@ -1,5 +1,5 @@
 ========================================
-    EXCEL CONVERTER v1.0.0
+    EXCEL CONVERTER v1.1.0
     XLS/XLSM to XLSX Converter
     with X97M/Laroux Virus Protection
 ========================================
