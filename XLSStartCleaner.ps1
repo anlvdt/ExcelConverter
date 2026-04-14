@@ -77,8 +77,7 @@ $script:virusModuleNames = @(
 # Known malicious macro/function names
 $script:virusMacroNames = @(
     "auto_open", "check_files", "ck_files", "scan_files",
-    "cop", "escape", "del", "back",
-    "Auto_Open", "Check_Files", "Ck_Files", "Scan_Files"
+    "cop", "escape", "del", "back"
 )
 
 # XLSTART paths to scan

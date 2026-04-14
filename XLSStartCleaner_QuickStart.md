@@ -159,9 +159,8 @@ Nếu công cụ này hữu ích, hãy ủng hộ tác giả:
 
 ## 📞 Hỗ trợ
 
-- 📧 Email: [Your Email]
-- 📱 Phone: [Your Phone]
-- 🌐 Website: [Your Website]
+- 📧 Email: anlvdt@github
+- 🌐 GitHub: github.com/anlvdt
 
 ---
 

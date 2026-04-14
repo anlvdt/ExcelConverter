@@ -30,13 +30,13 @@ FEATURES:
 - Auto-remove infected VBA modules
 - Scan all XLSTART folders (Office 2007-2021, 365)
 - Auto-scan XLSTART folders before conversion
-- Detect 19+ known virus file variants:
+- Detect 27+ known virus file variants:
   PERSONAL.XLS, VERA.XLS, PLDT.XLS, STARTUP.XLS,
   BOOK1.XLS, CAR.XLS, CURE.XLS, DIMON.XLS,
   ECSYSTEM.XLS, KINSLAYER.XLS, NEGS.XLS, NOCAL.XLS,
   PRIVAT.XLS, RESULTS.XLS, SGV.XLS, SING.XLS,
   WINDOS.XLS, XLSTART.XLS, BINV.XLS
-- Detect 21+ malicious VBA module names:
+- Detect 23+ malicious VBA module names:
   laroux, car, cure, foxz, lalala, locas, monci,
   pldt, program, results, sgv, startup, wendy,
   vera, binv, dimon, ecsystem, kinslayer, negs,

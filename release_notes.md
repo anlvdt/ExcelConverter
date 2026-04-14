@@ -1,4 +1,4 @@
-## Excel Converter v1.0.0
+## Excel Converter v1.1.0
 
 **Convert XLS/XLSM to XLSX with X97M/Laroux Virus Protection**
 
@@ -22,7 +22,7 @@
 - **NEW: Scan XLSTART button** - Quick access to virus scanner from main GUI
 
 ### Installation | Cài đặt
-1. Download ExcelConverter_v1.0.0.zip
+1. Download ExcelConverter-v1.1.0.zip
 2. Extract the ZIP file
 3. Double-click ExcelConverter.cmd to run
 

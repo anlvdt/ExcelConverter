@@ -20,8 +20,8 @@
 # - Detect malicious macros by reading code content
 # - Auto-remove infected VBA modules
 # - Scan all XLSTART folders (Office 2007-2021, 365)
-# - Detect 19+ known virus file variants
-# - Detect 21+ malicious VBA module names
+# - Detect 27+ known virus file variants
+# - Detect 23+ malicious VBA module names
 # - Detect 8+ virus macro functions
 # - Final security scan after conversion
 #
@@ -328,9 +328,7 @@ $virusModuleNames = @(
 # Known malicious macro/function names from Microsoft
 $virusMacroNames = @(
     "auto_open", "check_files", "ck_files", "scan_files",
-    "cop", "escape", "del", "back",
-    # Case variations
-    "Auto_Open", "Check_Files", "Ck_Files", "Scan_Files"
+    "cop", "escape", "del", "back"
 )
 
 # XLSTART paths to scan (all possible locations)
@@ -605,8 +603,8 @@ $btnAbout.Add_Click({
         $aboutText += "  - Detect malicious macros by code content`r`n"
         $aboutText += "  - Auto-remove infected VBA modules`r`n"
         $aboutText += "  - Scan XLSTART folders (Office 2007-365)`r`n"
-        $aboutText += "  - Detect 19+ virus file variants`r`n"
-        $aboutText += "  - Detect 21+ malicious module names`r`n"
+        $aboutText += "  - Detect 27+ virus file variants`r`n"
+        $aboutText += "  - Detect 23+ malicious module names`r`n"
         $aboutText += "  - Detect 8+ virus macro functions`r`n"
         $aboutText += "`r`n"
         $aboutText += "Reference: gist.github.com/gabceb/954418`r`n"
@@ -909,9 +907,6 @@ $btnConvert.Add_Click({
             }
             [GC]::Collect()
             [GC]::WaitForPendingFinalizers()
-        
-            $btnConvert.Enabled = $true
-            $btnBrowse.Enabled = $true
         }
     })
 
