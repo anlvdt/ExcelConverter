@@ -1,142 +1,62 @@
-# Excel Converter v1.1.0
+# Excel Converter v1.2.0
 
-**Convert XLS/XLSM to XLSX with X97M/Laroux Virus Protection**
+Chuyển hàng loạt **XLS / XLSM / XLSB → XLSX** bằng Microsoft Excel desktop trên Windows, hỗ trợ đường dẫn local dài trong thư mục OneDrive và SharePoint đã Sync.
 
-Author: Le An (Vietnam IT)
+## Chạy ứng dụng
 
----
+Yêu cầu: Windows 10/11, Windows PowerShell 5.1 (hoặc PowerShell 7 để chạy CLI/test), Microsoft Excel desktop đã cài và kích hoạt. Giải nén toàn bộ gói ứng dụng vào thư mục local ngắn, ví dụ `C:\Tools\ExcelConverter`; giữ các file PS1, PSM1 và C# cạnh nhau. Không cần chạy Administrator.
 
-## Features | Tính năng
+1. Mở `ExcelConverter.cmd` hoặc `ExcelConverter.bat`.
+2. **Add Folder**, **Files**, hoặc kéo thả nhiều file/thư mục từ Explorer vào queue.
+3. Chọn **Include subfolders** nếu cần. Thư mục con `old` và file khóa `~$` được bỏ qua. Có thể chọn trực tiếp `old` nếu thực sự muốn xử lý thư mục đó.
+4. Nhấn **CONVERT**. Giữ nguồn là mặc định; Move/Delete chỉ thực hiện sau khi xác minh kết quả. Timeout mặc định **180 giây/file**, có thể điều chỉnh.
+5. **CANCEL** dừng file hiện tại và phần còn lại. **Reports** mở CSV kết quả tại `%LOCALAPPDATA%\ExcelConverter\Reports`.
 
-### Conversion | Chuyển đổi
-- Convert XLS (Excel 97-2003) to XLSX | Chuyển đổi XLS sang XLSX
-- Convert XLSM (Macro-enabled) to XLSX | Chuyển đổi XLSM sang XLSX
-- Batch convert entire folders with subfolders | Chuyển đổi hàng loạt cả thư mục con
-- Move or delete original files after conversion | Di chuyển hoặc xóa file gốc sau khi chuyển đổi
+File đã có đuôi `.xlsx` được ghi **AlreadyXlsx**, không tạo thêm bản chuyển đổi; đây là phân loại đuôi file, không phải chứng nhận file sạch/hợp lệ. Tên `abc.xlsm.xlsx` vẫn là XLSX. **Giải nén ZIP/7z trước** khi thêm dữ liệu vào queue.
 
-### Security - X97M/Laroux Virus Protection | Bảo mật - Chống virus X97M/Laroux
-- Deep scan VBA modules inside workbooks | Quét sâu VBA modules trong workbook
-- Detect malicious macros by reading code content | Phát hiện macro độc hại bằng cách đọc code
-- Auto-remove infected VBA modules | Tự động xóa VBA modules bị nhiễm
-- Scan all XLSTART folders (Office 2007-2021, 365) | Quét tất cả thư mục XLSTART
-- Detect 27+ known virus file variants | Phat hien 27+ bien the virus
-- Detect 23+ malicious VBA module names | Phat hien 23+ ten module doc hai
-- Detect 8+ virus macro functions | Phat hien 8+ ham macro virus
-- Final security scan after conversion | Quét bảo mật sau khi chuyển đổi
+## Đường dẫn OneDrive / SharePoint Sync
 
----
+Chọn **đường dẫn local trong Explorer** của OneDrive hoặc thư viện SharePoint đã Sync. Ứng dụng dùng Unicode filesystem IO để đọc đường dẫn dài, copy workbook vào thư mục tạm ngắn, chuyển đổi bằng Excel rồi lưu kết quả cạnh nguồn. File trùng tên được tăng hậu tố, không ghi đè.
 
-## Installation | Cài đặt
+Placeholder cần sync client đang chạy, đủ quyền và có mạng để hydrate. File không tải được, bị khóa hoặc Excel treo được ghi lỗi/timeout riêng; batch tiếp tục. Nếu dữ liệu lớn, tăng timeout hoặc chọn **Always keep on this device** trước khi chạy.
 
-1. Download the latest release | Tải phiên bản mới nhất
-2. Extract the ZIP file | Giải nén file ZIP
-3. Double-click `ExcelConverter.cmd` to run | Double-click `ExcelConverter.cmd` để chạy
+Nếu thư mục Temp của profile quá dài/chứa dấu ngoặc vuông, đặt `EXCELCONVERTER_TEMP` tới thư mục local ngắn mà tài khoản có quyền ghi, ví dụ `C:\ECtemp`, rồi chạy lại. Không đặt thư mục tạm này trong nơi sync.
 
----
+Giới hạn sync cloud vẫn áp dụng. Việc convert/lưu local không bảo đảm OneDrive đã upload thành công. Không hỗ trợ URL SharePoint trực tiếp, file chưa Sync, bypass quyền, mật khẩu hay DLP/IRM.
 
-## Usage Guide | Hướng dẫn sử dụng
+## Batch không giao diện
 
-### Step 1: Add to Queue | Bước 1: Thêm vào Danh sách (Queue)
-- Drag and drop folders or files directly into the Batch Queue, or click **Add Folder**.
-- Kéo thả trực tiếp thư mục/file vào ô Batch Queue, hoặc nhấn **Add Folder**.
-- Use **Clear List** to empty the queue for a new batch | Nhấn **Clear List** để làm trống danh sách nếu muốn chạy mẻ (batch) mới.
+Chạy từ PowerShell trong thư mục ứng dụng:
 
-| Option | Description | Mô tả |
-|--------|-------------|-------|
-| **Move original files to 'old' folder** | Move converted files to 'old' subfolder | Di chuyển file gốc vào thư mục con 'old' |
-| **Include subfolders** | Scan and convert files in all subfolders | Quét và chuyển đổi file trong tất cả thư mục con |
-| **Show Excel window** | Display Excel during conversion (for debugging) | Hiển thị Excel khi chuyển đổi (để debug) |
-| **Delete original files** | Permanently delete original files (use with caution!) | Xóa vĩnh viễn file gốc (cẩn thận!) |
-
-### Step 3: Convert | Bước 3: Chuyển đổi
-- Click **CONVERT** button to start conversion
-- Nhấn nút **CONVERT** để bắt đầu chuyển đổi
-
-### Step 4: Review Results | Bước 4: Xem kết quả
-- Check the Activity Log for conversion status and any virus detections
-- Kiểm tra Activity Log để xem trạng thái chuyển đổi và phát hiện virus
-
-### About Button (?) | Nút Giới thiệu (?)
-- Click **?** button in the header to view features and donate information
-- Nhấn nút **?** ở header để xem tính năng và thông tin ủng hộ
-
-### Scan XLSTART Button | Nut Quet XLSTART
-- Click **Scan XLSTART** button to launch standalone virus scanner
-- Nhan nut **Scan XLSTART** de mo cong cu quet virus doc lap
-- This tool scans and removes viruses from Excel XLSTART folders without converting files
-- Cong cu nay quet va xoa virus tu thu muc XLSTART ma khong can chuyen doi file
-
----
-
-## XLSStart Cleaner (Standalone Tool) | Công cụ Quét XLSTART (Độc lập)
-
-### What is XLSStart Cleaner? | XLSStart Cleaner là gì?
-A dedicated tool to scan and remove X97M/Laroux virus from Excel XLSTART folders without converting files.
-
-Công cụ chuyên dụng để quét và xóa virus X97M/Laroux từ thư mục XLSTART mà không cần chuyển đổi file.
-
-### How to use | Cách sử dụng:
-
-**Method 1: From Main GUI | Phuong phap 1: Tu GUI chinh**
-1. Open Excel Converter | Mo Excel Converter
-2. Click **Scan XLSTART** button in the header | Nhan nut **Scan XLSTART** o header
-3. XLSStart Cleaner will open in a new window | XLSStart Cleaner se mo trong cua so moi
-
-**Method 2: Run Standalone | Phương pháp 2: Chạy độc lập**
-1. Double-click `XLSStartCleaner.bat` | Double-click `XLSStartCleaner.bat`
-2. Or run `XLSStartCleaner.ps1` directly | Hoặc chạy `XLSStartCleaner.ps1` trực tiếp
-
-### Features | Tính năng:
-- **SCAN ONLY**: Detect viruses without removing them | Phát hiện virus mà không xóa
-- **SCAN & CLEAN**: Detect and permanently remove infected files | Phát hiện và xóa vĩnh viễn file nhiễm virus
-- Scans 13+ XLSTART locations (Office 2007-365) | Quét 13+ vị trí XLSTART
-- Deep VBA code analysis | Phân tích sâu VBA code
-- Detailed scan report | Báo cáo quét chi tiết
-
-
-## Requirements | Yêu cầu
-
-- Windows 7/8/10/11
-- Microsoft Excel installed | Microsoft Excel đã cài đặt
-- PowerShell (included in Windows) | PowerShell (có sẵn trong Windows)
-
----
-
-## Screenshot | Ảnh chụp màn hình
-
-![Excel Converter](screenshot.png)
-
----
-
-## Virus Detection | Phát hiện Virus
-
-### Known virus file names | Tên file virus đã biết:
-```
-BINV.XLS, BOOK1.XLS, CAR.XLS, CURE.XLS, DIMON.XLS,
-ECSYSTEM.XLS, KINSLAYER.XLS, NEGS.XLS, NOCAL.XLS,
-PERSONAL.XLS, PLDT.XLS, PRIVAT.XLS, RESULTS.XLS,
-SGV.XLS, SING.XLS, STARTUP.XLS, VERA.XLS, WINDOS.XLS, XLSTART.XLS
+```powershell
+.\ConvertXLS_Batch.ps1 -Path 'C:\Users\User\OneDrive - Company\Reports', 'D:\Archive' -Recurse -TimeoutSeconds 300 -ReportPath 'C:\Temp\results.csv'
 ```
 
-### Known malicious module names | Tên module độc hại:
-```
-car, cure, foxz, lalala, laroux, locas, monci, pldt,
-program, results, sgv, startup, wendy, vera, binv,
-dimon, ecsystem, kinslayer, negs, nocal, privat, sing, windos, xlstart
+Mặc định `-OriginalAction Keep`. Có thể chọn `Move` (vào `old`) hoặc `Delete` (xóa vĩnh viễn sau xác minh). Không chỉnh sửa nguồn đồng thời với conversion; ưu tiên Keep khi thư mục có nhiều người cùng sửa. File có external workbook links luôn giữ nguồn và báo cảnh báo cần kiểm tra link tương đối.
+
+Trạng thái CSV: `Converted`, `ConvertedWithWarning`, `AlreadyXlsx`, `ScanError`, `Failed`, `TimedOut`, `Canceled`, `NotProcessed`, `OutputSaved`. `OutputSaved` nghĩa là đã công bố output nhưng chưa xác nhận cleanup nguồn. CLI trả exit code 1 nếu có trạng thái cần kiểm tra.
+
+## Kiểm tra và bảo toàn dữ liệu
+
+- Mở nguồn read-only, không cập nhật external workbook links, tắt events và VBA khi automation mở file.
+- Excel mở lại kết quả, kiểm tra định dạng; package XLSX/XML được kiểm tra trước công bố.
+- Copy kết quả sang file tạm cạnh đích, so SHA-256, rename không ghi đè, sau đó mới xử lý bản gốc.
+- Worker và Excel riêng theo file; timeout/hủy chỉ cleanup Excel PID/start time do worker ghi nhận sở hữu.
+- **XLSX loại bỏ VBA**; macro UDF và tính năng legacy có thể không còn hoạt động. Kiểm tra kết quả trước khi dùng thay thế nguồn.
+- Đây là công cụ conversion, **không phải antivirus**. AutomationSecurity không vô hiệu hóa XLM trong mọi trường hợp; Trust Center và chính sách doanh nghiệp vẫn áp dụng. Converter không tự xóa file theo tên nghi là virus và không đụng XLSTART.
+
+Công cụ `XLSStartCleaner` cũ vẫn tồn tại độc lập trong repository, không đi kèm gói converter mới; không nằm trong luồng chuyển đổi mới. Heuristic tên file/module của nó có thể báo nhầm; xem mã và sao lưu trước khi sử dụng.
+
+## Kiểm thử
+
+```powershell
+.\tests\Run.Tests.ps1
+# Windows có Excel desktop: kiểm thử tích hợp với fixture tự tạo
+.\tests\Excel.Smoke.Tests.ps1
 ```
 
-### Known virus macro functions | Hàm macro virus:
-```
-auto_open, check_files, ck_files, scan_files, cop, escape, del, back
-```
+CI cấu hình Windows PowerShell 5.1 và PowerShell 7. Kiểm thử trên macOS chỉ kiểm tra core/worker orchestration; không thay thế việc chạy Excel COM, WinForms và sync client thực trên Windows. [Báo cáo deep audit](docs/AUDIT-2026-10-26.md) ghi đầy đủ nguyên nhân, bằng chứng và giới hạn kiểm chứng.
 
----
-
-## References | Tham khảo
-
-- Original conversion script: [gist.github.com/gabceb/954418](https://gist.github.com/gabceb/954418)
-- Microsoft Threat Encyclopedia: [X97M/Laroux](https://www.microsoft.com/en-us/wdsi/threats/malware-encyclopedia-description?Name=Virus:X97M/Laroux)
-- TrendMicro Threat Database: [X97M_LAROUX](https://www.trendmicro.com/vinfo/us/threat-encyclopedia/malware/X97M_LAROUX.RR)
 ---
 
 ## Tác giả

@@ -1,0 +1,17 @@
+name: Converter regression tests
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  core:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        engine: [powershell.exe, pwsh.exe]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Parse scripts and run regression tests
+        shell: pwsh
+        env:
+          EC_TEST_ENGINE: ${{ matrix.engine }}
+        run: |
+          & $env:EC_TEST_ENGINE -NoProfile -ExecutionPolicy Bypass -File ./tests/Run.Tests.ps1
+          exit $LASTEXITCODE

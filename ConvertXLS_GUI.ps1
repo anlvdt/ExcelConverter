@@ -1,37 +1,8 @@
-#############################
-# Excel XLS/XLSM to XLSX Converter
-# Professional GUI Application with Virus Protection
-#
-# Author: Le An (Vietnam IT)
-# Version: 1.1.0
-# Date: January 2026
-#
-# FEATURES:
-# =========
-# [Conversion]
-# - Convert XLS (Excel 97-2003) to XLSX
-# - Convert XLSM (Macro-enabled) to XLSX
-# - Batch convert entire folders with subfolders
-# - Move or delete original files after conversion
-# - Activity log with timestamps
-#
-# [Security - X97M/Laroux Virus Protection]
-# - Deep scan VBA modules inside workbooks
-# - Detect malicious macros by reading code content
-# - Auto-remove infected VBA modules
-# - Scan all XLSTART folders (Office 2007-2021, 365)
-# - Detect 27+ known virus file variants
-# - Detect 23+ malicious VBA module names
-# - Detect 8+ virus macro functions
-# - Final security scan after conversion
-#
-# Original conversion script reference:
-# https://gist.github.com/gabceb/954418
-#
-# Virus detection based on:
-# - Microsoft Threat Encyclopedia (X97M/Laroux)
-# - TrendMicro Threat Database
-#############################
+﻿# Excel Converter v1.2.0 - Windows desktop Excel batch conversion.
+# Source files are preserved by default. Long synced paths use local staging.
+# See docs/AUDIT-2026-10-26.md for findings and verification limits.
+$ErrorActionPreference = 'Stop'
+Import-Module (Join-Path $PSScriptRoot 'ExcelConverter.Core.psm1') -Force
 
 # Hide console window
 Add-Type -Name Window -Namespace Console -MemberDefinition '
@@ -85,7 +56,7 @@ $lblHeader.BackColor = [System.Drawing.Color]::Transparent
 $pnlHeader.Controls.Add($lblHeader)
 
 $lblSubHeader = New-Object System.Windows.Forms.Label
-$lblSubHeader.Text = "Convert XLS/XLSM to XLSX with X97M/Laroux virus protection"
+$lblSubHeader.Text = "Batch XLS/XLSM/XLSB to XLSX | Long synced paths supported"
 $lblSubHeader.Location = New-Object System.Drawing.Point(25, 45)
 $lblSubHeader.Size = New-Object System.Drawing.Size(450, 20)
 $lblSubHeader.Font = New-Object System.Drawing.Font("Segoe UI", 9)
@@ -158,15 +129,33 @@ $btnQueueAdd.Cursor = "Hand"
 $pnlQueue.Controls.Add($btnQueueAdd)
 
 $btnQueueClear = New-Object System.Windows.Forms.Button
-$btnQueueClear.Text = "Clear List"
+$btnQueueClear.Text = "Clear"
 $btnQueueClear.Location = New-Object System.Drawing.Point(535, 78)
-$btnQueueClear.Size = New-Object System.Drawing.Size(95, 32)
+$btnQueueClear.Size = New-Object System.Drawing.Size(46, 32)
 $btnQueueClear.FlatStyle = "Flat"
 $btnQueueClear.BackColor = [System.Drawing.Color]::FromArgb(230,230,230)
 $btnQueueClear.ForeColor = $textColor
 $btnQueueClear.FlatAppearance.BorderSize = 0
 $btnQueueClear.Cursor = "Hand"
 $pnlQueue.Controls.Add($btnQueueClear)
+
+$btnQueueFiles = New-Object System.Windows.Forms.Button
+$btnQueueFiles.Text = "Files"
+$btnQueueFiles.Location = New-Object System.Drawing.Point(584, 78)
+$btnQueueFiles.Size = New-Object System.Drawing.Size(46, 32)
+$pnlQueue.Controls.Add($btnQueueFiles)
+$btnQueueFiles.Add_Click({
+    $dialog = New-Object System.Windows.Forms.OpenFileDialog
+    $dialog.Filter = "Excel workbooks|*.xls;*.xlsm;*.xlsb;*.xlsx"
+    $dialog.Multiselect = $true
+    try {
+        if ($dialog.ShowDialog() -eq 'OK') {
+            foreach ($path in $dialog.FileNames) {
+                if (-not $lstQueue.Items.Contains($path)) { $lstQueue.Items.Add($path) | Out-Null }
+            }
+        }
+    } finally { $dialog.Dispose() }
+})
 
 # Options Card
 $pnlOptions = New-Object System.Windows.Forms.Panel
@@ -187,7 +176,7 @@ $chkMoveOld = New-Object System.Windows.Forms.CheckBox
 $chkMoveOld.Text = "Move original files to 'old' folder"
 $chkMoveOld.Location = New-Object System.Drawing.Point(15, 40)
 $chkMoveOld.Size = New-Object System.Drawing.Size(260, 22)
-$chkMoveOld.Checked = $true
+$chkMoveOld.Checked = $false
 $chkMoveOld.ForeColor = $textColor
 $chkMoveOld.Cursor = "Hand"
 $pnlOptions.Controls.Add($chkMoveOld)
@@ -204,7 +193,7 @@ $pnlOptions.Controls.Add($chkRecursive)
 $chkShowExcel = New-Object System.Windows.Forms.CheckBox
 $chkShowExcel.Text = "Show Excel window"
 $chkShowExcel.Location = New-Object System.Drawing.Point(300, 40)
-$chkShowExcel.Size = New-Object System.Drawing.Size(260, 22)
+$chkShowExcel.Size = New-Object System.Drawing.Size(135, 22)
 $chkShowExcel.Checked = $false
 $chkShowExcel.ForeColor = $textColor
 $chkShowExcel.Cursor = "Hand"
@@ -218,6 +207,19 @@ $chkDeleteOld.Checked = $false
 $chkDeleteOld.ForeColor = $errorColor
 $chkDeleteOld.Cursor = "Hand"
 $pnlOptions.Controls.Add($chkDeleteOld)
+
+$lblTimeout = New-Object System.Windows.Forms.Label
+$lblTimeout.Text = "Timeout (s)"
+$lblTimeout.Location = New-Object System.Drawing.Point(435, 43)
+$lblTimeout.Size = New-Object System.Drawing.Size(80, 22)
+$pnlOptions.Controls.Add($lblTimeout)
+$numTimeout = New-Object System.Windows.Forms.NumericUpDown
+$numTimeout.Location = New-Object System.Drawing.Point(520, 40)
+$numTimeout.Size = New-Object System.Drawing.Size(85, 22)
+$numTimeout.Minimum = 5
+$numTimeout.Maximum = 86400
+$numTimeout.Value = 180
+$pnlOptions.Controls.Add($numTimeout)
 
 # Log Card
 $pnlLog = New-Object System.Windows.Forms.Panel
@@ -294,7 +296,7 @@ $pnlStatus.Controls.Add($btnCancel)
 
 # Footer with author info
 $lblFooter = New-Object System.Windows.Forms.Label
-$lblFooter.Text = "v1.1.0 | Le An (Vietnam IT) | Ref: gist.github.com/gabceb/954418"
+$lblFooter.Text = "v1.2.0 | Le An (Vietnam IT) | Ref: gist.github.com/gabceb/954418"
 $lblFooter.Location = New-Object System.Drawing.Point(20, 588)
 $lblFooter.Size = New-Object System.Drawing.Size(645, 18)
 $lblFooter.Font = New-Object System.Drawing.Font("Segoe UI", 8)
@@ -302,59 +304,6 @@ $lblFooter.ForeColor = $subtextColor
 $lblFooter.TextAlign = "MiddleCenter"
 $form.Controls.Add($lblFooter)
 
-# X97M_LAROUX virus variants - Complete list from Microsoft Threat Encyclopedia
-# Known infected file names created in XLSTART folder
-$virusFileNames = @(
-    # Microsoft documented variants
-    "BINV.XLS", "BOOK1.XLS", "CAR.XLS", "CURE.XLS", "DIMON.XLS",
-    "ECSYSTEM.XLS", "KINSLAYER.XLS", "NEGS.XLS", "NOCAL.XLS",
-    "PERSONAL.XLS", "PLDT.XLS", "PRIVAT.XLS", "RESULTS.XLS",
-    "SGV.XLS", "SING.XLS", "STARTUP.XLS", "VERA.XLS", "WINDOS.XLS",
-    "XLSTART.XLS",
-    # Additional variants from other sources
-    "k4.xls", "xl5glary.xls", "mypersonnel.xls", "Xlscan.xls",
-    "laroux.xls", "sheet.xls", "auto.xls", "ssheet.xls"
-)
-
-# Known malicious VBA module names from Microsoft
-$virusModuleNames = @(
-    "car", "cure", "foxz", "lalala", "laroux", "locas",
-    "monci", "pldt", "program", "results", "sgv", "startup", "wendy",
-    # Additional module names
-    "vera", "binv", "dimon", "ecsystem", "kinslayer", "negs",
-    "nocal", "privat", "sing", "windos", "xlstart", "k4", "xl5glary"
-)
-
-# Known malicious macro/function names from Microsoft
-$virusMacroNames = @(
-    "auto_open", "check_files", "ck_files", "scan_files",
-    "cop", "escape", "del", "back"
-)
-
-# XLSTART paths to scan (all possible locations)
-$xlstartPaths = @(
-    "$env:APPDATA\Microsoft\Excel\XLSTART",
-    "$env:USERPROFILE\AppData\Roaming\Microsoft\Excel\XLSTART",
-    # Office 365 / Office 2019/2021
-    "C:\Program Files\Microsoft Office\root\Office16\XLSTART",
-    "C:\Program Files (x86)\Microsoft Office\root\Office16\XLSTART",
-    # Office 2016
-    "C:\Program Files\Microsoft Office\Office16\XLSTART",
-    "C:\Program Files (x86)\Microsoft Office\Office16\XLSTART",
-    # Office 2013
-    "C:\Program Files\Microsoft Office\Office15\XLSTART",
-    "C:\Program Files (x86)\Microsoft Office\Office15\XLSTART",
-    # Office 2010
-    "C:\Program Files\Microsoft Office\Office14\XLSTART",
-    "C:\Program Files (x86)\Microsoft Office\Office14\XLSTART",
-    # Office 2007
-    "C:\Program Files\Microsoft Office\Office12\XLSTART",
-    "C:\Program Files (x86)\Microsoft Office\Office12\XLSTART",
-    # Legacy paths
-    "C:\MSOFFICE\EXCEL\XLSTART"
-)
-
-# Functions
 function Write-Log {
     param([string]$Message, [string]$Type = "Info")
     $timestamp = Get-Date -Format "HH:mm:ss"
@@ -362,193 +311,6 @@ function Write-Log {
     $txtLog.SelectionStart = $txtLog.Text.Length
     $txtLog.ScrollToCaret()
     [System.Windows.Forms.Application]::DoEvents()
-}
-
-function Test-X97MLaroux {
-    param([string]$FilePath)
-    $fileName = [System.IO.Path]::GetFileName($FilePath)
-    # Check against all known virus file names (case-insensitive)
-    foreach ($virusName in $virusFileNames) {
-        if ($fileName -ieq $virusName) {
-            return $true
-        }
-    }
-    return $false
-}
-
-function Remove-X97MLarouxVirus {
-    $removed = $false
-    $removedCount = 0
-    
-    # Scan all XLSTART paths
-    foreach ($xlstartPath in $xlstartPaths) {
-        if (Test-Path $xlstartPath) {
-            # Get all xls/xlsm files in XLSTART
-            $xlsFiles = Get-ChildItem -Path $xlstartPath -Include "*.xls", "*.xlsm", "*.xla", "*.xlam" -File -ErrorAction SilentlyContinue
-            foreach ($file in $xlsFiles) {
-                if ($script:cancelProcessing -eq $true) {
-                    Write-Log "PROCESS CANCELED BY USER!"
-                    break
-                }
-                $isVirus = $false
-                
-                # Check if filename matches known virus names (case-insensitive)
-                foreach ($virusName in $virusFileNames) {
-                    if ($file.Name -ieq $virusName) {
-                        $isVirus = $true
-                        break
-                    }
-                }
-                
-                if ($isVirus) {
-                    try {
-                        Remove-Item $file.FullName -Force
-                        Write-Log "[VIRUS] Removed: $($file.FullName)"
-                        $removedCount++
-                        $removed = $true
-                    }
-                    catch {
-                        Write-Log "[VIRUS] Failed to remove: $($file.FullName) - File may be in use"
-                    }
-                }
-            }
-        }
-    }
-    
-    # Check Windows\System folder for Xlscan.386 (VCX variant)
-    $xlscan386 = "C:\Windows\System\Xlscan.386"
-    if (Test-Path $xlscan386) {
-        try {
-            Remove-Item $xlscan386 -Force
-            Write-Log "[VIRUS] Removed: $xlscan386"
-            $removedCount++
-            $removed = $true
-        }
-        catch {}
-    }
-    
-    if ($removedCount -gt 0) {
-        Write-Log "[VIRUS] Total files removed: $removedCount"
-    }
-    
-    return $removed
-}
-
-function Test-WorkbookForVirus {
-    param($Workbook)
-    $infected = $false
-    $infectedModules = @()
-    
-    try {
-        $vbProj = $Workbook.VBProject
-        if ($vbProj) {
-            foreach ($comp in $vbProj.VBComponents) {
-                $compName = $comp.Name.ToLower()
-                
-                # Check module name against known virus module names
-                foreach ($virusModule in $virusModuleNames) {
-                    if ($compName -eq $virusModule.ToLower()) {
-                        $infected = $true
-                        $infectedModules += $comp.Name
-                        break
-                    }
-                }
-                
-                # Check for virus macros inside the module
-                if ($comp.Type -eq 1) {
-                    # vbext_ct_StdModule
-                    try {
-                        $codeModule = $comp.CodeModule
-                        if ($codeModule.CountOfLines -gt 0) {
-                            $code = $codeModule.Lines(1, $codeModule.CountOfLines).ToLower()
-                            foreach ($virusMacro in $virusMacroNames) {
-                                if ($code -match $virusMacro.ToLower()) {
-                                    $infected = $true
-                                    if ($infectedModules -notcontains $comp.Name) {
-                                        $infectedModules += $comp.Name
-                                    }
-                                    break
-                                }
-                            }
-                        }
-                    }
-                    catch {}
-                }
-            }
-        }
-    }
-    catch {
-        # VBA project may be protected or inaccessible
-    }
-    
-    return @{
-        Infected = $infected
-        Modules  = $infectedModules
-    }
-}
-
-function Remove-VirusFromWorkbook {
-    param($Workbook)
-    $removed = 0
-    
-    try {
-        $vbProj = $Workbook.VBProject
-        if ($vbProj) {
-            $componentsToRemove = @()
-            
-            foreach ($comp in $vbProj.VBComponents) {
-                $compName = $comp.Name.ToLower()
-                $shouldRemove = $false
-                
-                # Check module name
-                foreach ($virusModule in $virusModuleNames) {
-                    if ($compName -eq $virusModule.ToLower()) {
-                        $shouldRemove = $true
-                        break
-                    }
-                }
-                
-                # Check macro content
-                if (-not $shouldRemove -and $comp.Type -eq 1) {
-                    try {
-                        $codeModule = $comp.CodeModule
-                        if ($codeModule.CountOfLines -gt 0) {
-                            $code = $codeModule.Lines(1, $codeModule.CountOfLines).ToLower()
-                            foreach ($virusMacro in $virusMacroNames) {
-                                if ($code -match $virusMacro.ToLower()) {
-                                    $shouldRemove = $true
-                                    break
-                                }
-                            }
-                        }
-                    }
-                    catch {}
-                }
-                
-                if ($shouldRemove) {
-                    $componentsToRemove += $comp
-                }
-            }
-            
-            # Remove infected components
-            foreach ($comp in $componentsToRemove) {
-                try {
-                    $compName = $comp.Name
-                    $vbProj.VBComponents.Remove($comp)
-                    Write-Log "  [VIRUS] Removed module: $compName"
-                    $removed++
-                }
-                catch {
-                    Write-Log "  [VIRUS] Could not remove module: $($comp.Name)"
-                }
-            }
-        }
-    }
-    catch {
-        # VBA project protected
-    }
-    
-    return $removed
 }
 
 function Set-Status {
@@ -564,52 +326,31 @@ function Set-Status {
 }
 
 # Event Handlers
+$btnScanXLStart.Text = "Reports"
 $btnScanXLStart.Add_Click({
-        # Launch XLSStart Cleaner tool
-        $cleanerPath = Join-Path $PSScriptRoot "XLSStartCleaner.ps1"
-        if (Test-Path $cleanerPath) {
-            try {
-                Start-Process powershell.exe -ArgumentList "-ExecutionPolicy Bypass -File `"$cleanerPath`"" -WindowStyle Hidden
-            }
-            catch {
-                [System.Windows.Forms.MessageBox]::Show(
-                    "Could not launch XLSStart Cleaner.`n`nError: $($_.Exception.Message)",
-                    "Error", "OK", "Error"
-                )
-            }
-        }
-        else {
-            [System.Windows.Forms.MessageBox]::Show(
-                "XLSStartCleaner.ps1 not found!`n`nExpected location: $cleanerPath",
-                "Error", "OK", "Error"
-            )
-        }
-    })
+    $directory = Join-Path $env:LOCALAPPDATA 'ExcelConverter\Reports'
+    [IO.Directory]::CreateDirectory($directory) | Out-Null
+    Start-Process explorer.exe -ArgumentList ('"' + $directory + '"')
+})
 
 $btnAbout.Add_Click({
-        $aboutText = "EXCEL CONVERTER v1.1.0`r`n"
+        $aboutText = "EXCEL CONVERTER v1.2.0`r`n"
         $aboutText += "Author: Le An (Vietnam IT)`r`n"
         $aboutText += "`r`n"
         $aboutText += "FEATURES:`r`n"
         $aboutText += "-----------------------------------------`r`n"
         $aboutText += "[Conversion]`r`n"
         $aboutText += "  - Convert XLS (Excel 97-2003) to XLSX`r`n"
-        $aboutText += "  - Convert XLSM (Macro-enabled) to XLSX`r`n"
+        $aboutText += "  - Convert XLSM/XLSB to XLSX`r`n"
         $aboutText += "  - Batch convert folders with subfolders`r`n"
         $aboutText += "  - Move or delete original files`r`n"
         $aboutText += "`r`n"
-        $aboutText += "[Security - X97M/Laroux Protection]`r`n"
-        $aboutText += "  - Deep scan VBA modules in workbooks`r`n"
-        $aboutText += "  - Detect malicious macros by code content`r`n"
-        $aboutText += "  - Auto-remove infected VBA modules`r`n"
-        $aboutText += "  - Scan XLSTART folders (Office 2007-365)`r`n"
-        $aboutText += "  - Detect 27+ virus file variants`r`n"
-        $aboutText += "  - Detect 23+ malicious module names`r`n"
-        $aboutText += "  - Detect 8+ virus macro functions`r`n"
-        $aboutText += "`r`n"
-        $aboutText += "Reference: gist.github.com/gabceb/954418`r`n"
-        $aboutText += "Virus DB: Microsoft & TrendMicro`r`n"
-        $aboutText += "`r`n"
+        $aboutText += "[Batch reliability]`r`n"
+        $aboutText += "  - Long local OneDrive/SharePoint sync paths`r`n"
+        $aboutText += "  - Verified XLSX output; no overwrite`r`n"
+        $aboutText += "  - Per-file timeout, cancellation and CSV report`r`n"
+        $aboutText += "  - VBA execution disabled; macros removed in XLSX`r`n"
+        $aboutText += "  - Conversion is not an antivirus scan`r`n`r`n"
         $aboutText += "-----------------------------------------`r`n"
         $aboutText += "DONATE (Support the developer):`r`n"
         $aboutText += "-----------------------------------------`r`n"
@@ -647,6 +388,7 @@ $lstQueue.Add_DragEnter({
     })
 
     $lstQueue.Add_DragDrop({
+        if ($script:processing) { return }
         $files = $_.Data.GetData([System.Windows.Forms.DataFormats]::FileDrop)
         foreach ($f in $files) {
             if (-not $lstQueue.Items.Contains($f)) {
@@ -662,6 +404,7 @@ $lstQueue.Add_DragEnter({
     })
 
     $form.Add_DragDrop({
+        if ($script:processing) { return }
         $files = $_.Data.GetData([System.Windows.Forms.DataFormats]::FileDrop)
         foreach ($f in $files) {
             if (-not $lstQueue.Items.Contains($f)) {
@@ -698,217 +441,96 @@ $lstQueue.Add_DragEnter({
         }
     })
 
+$script:processing = $false
+$script:cancelProcessing = $false
+$form.Add_FormClosing({
+    if ($script:processing) {
+        $_.Cancel = $true
+        $script:cancelProcessing = $true
+        Set-Status "Canceling current file; close again when the batch stops." "Working"
+    }
+})
+
 $btnConvert.Add_Click({
-        if ($lstQueue.Items.Count -eq 0) {
-            [System.Windows.Forms.MessageBox]::Show("Please add folders or files to the queue!", "Error", "OK", "Error")
-            return
-        }
-    
-        $script:cancelProcessing = $false
-        $txtLog.Clear()
-        
-        $btnConvert.Enabled = $false
-        $btnQueueAdd.Enabled = $false
-        $btnQueueClear.Enabled = $false
-        $btnCancel.Enabled = $true
-        
+    if ($script:processing) { return }
+    if ($lstQueue.Items.Count -eq 0) {
+        [System.Windows.Forms.MessageBox]::Show("Add folders or files first. Extract ZIP/7z archives before adding them.", "Queue", "OK", "Information")
+        return
+    }
+    $script:processing = $true
+    $script:cancelProcessing = $false
+    $txtLog.Clear()
+    $paths = @($lstQueue.Items | ForEach-Object { [string]$_ })
+    $recursive = $chkRecursive.Checked
+    $showExcel = $chkShowExcel.Checked
+    $timeout = [int]$numTimeout.Value
+    $action = if ($chkDeleteOld.Checked) { 'Delete' } elseif ($chkMoveOld.Checked) { 'Move' } else { 'Keep' }
+    $controls = @($btnConvert, $btnQueueAdd, $btnQueueFiles, $btnQueueClear, $btnScanXLStart, $chkRecursive, $chkShowExcel, $chkMoveOld, $chkDeleteOld, $numTimeout)
+    foreach ($control in $controls) { $control.Enabled = $false }
+    $btnCancel.Enabled = $true
+    $results = [Collections.Generic.List[object]]::new()
+    $report = ''
+    $batchId = (Get-Date -Format 'yyyyMMdd-HHmmss') + '-' + [guid]::NewGuid().ToString('N').Substring(0, 6)
+    try {
+        $reportDir = Join-Path $env:LOCALAPPDATA 'ExcelConverter\Reports'
+        [IO.Directory]::CreateDirectory($reportDir) | Out-Null
+        $report = Join-Path $reportDir ($batchId + '.csv')
+        'Source,Output,Archive,Status,Error,DurationSeconds' | Set-Content -LiteralPath $report -Encoding UTF8
         Set-Status "Scanning queue..." "Working"
-        Write-Log "Scanning items in queue..."
-    
-        # Check for X97M_LAROUX virus before starting
-        Write-Log "Scanning for X97M/Laroux virus variants..."
-        Write-Log "Checking XLSTART folders for infected files..."
-        $virusFound = Remove-X97MLarouxVirus
-        if ($virusFound) {
-            Write-Log "[SECURITY] X97M/Laroux virus files removed!"
-            [System.Windows.Forms.MessageBox]::Show(
-                "X97M/Laroux virus detected and removed!`n`nInfected files found in Excel XLSTART folder(s).`n`nKnown variants: PERSONAL.XLS, VERA.XLS, PLDT.XLS, STARTUP.XLS, BOOK1.XLS, etc.",
-                "Virus Removed", "OK", "Warning"
-            )
+        $queue = Get-ECQueue -Paths $paths -Recurse:$recursive -OnProgress {
+            [System.Windows.Forms.Application]::DoEvents()
+            return (-not $script:cancelProcessing)
         }
-        else {
-            Write-Log "No virus files found in XLSTART folders"
+        foreach ($errorItem in $queue.Errors) {
+            Write-Log "SCAN ERROR: $($errorItem.Source) - $($errorItem.Error)"
+            $results.Add([pscustomobject]@{ Source = $errorItem.Source; Output = ''; Archive = ''; Status = 'ScanError'; Error = $errorItem.Error; DurationSeconds = 0 })
         }
-    
-        $xlsFiles = @()
-        try {
-            foreach ($item in $lstQueue.Items) {
-                if (-not (Test-Path $item)) { continue }
-                $itemObj = Get-Item $item
-                if ($itemObj.PSIsContainer) {
-                    if ($chkRecursive.Checked) {
-                        $xlsFiles += @(Get-ChildItem -Path $item -File -Recurse -ErrorAction SilentlyContinue | Where-Object { $_.Extension -eq ".xls" -or $_.Extension -eq ".xlsm" })
-                    } else {
-                        $xlsFiles += @(Get-ChildItem -Path $item -File -ErrorAction SilentlyContinue | Where-Object { $_.Extension -eq ".xls" -or $_.Extension -eq ".xlsm" })
-                    }
-                } else {
-                    if ($itemObj.Extension -eq ".xls" -or $itemObj.Extension -eq ".xlsm") {
-                        $xlsFiles += $itemObj
-                    }
-                }
-            }
-            # Deduplicate
-            $xlsFiles = $xlsFiles | Select-Object -Unique -Property FullName
+        foreach ($file in $queue.AlreadyXlsx) {
+            Write-Log "ALREADY XLSX (no conversion needed): $($file.FullName)"
+            $results.Add([pscustomobject]@{ Source = $file.FullName; Output = ''; Archive = ''; Status = 'AlreadyXlsx'; Error = ''; DurationSeconds = 0 })
         }
-        catch {
-            Write-Log "Error scanning files: $($_.Exception.Message)"
-            Set-Status "Error" "Error"
-            $btnConvert.Enabled = $true
-            $btnQueueAdd.Enabled = $true
-            $btnQueueClear.Enabled = $true
-            $btnCancel.Enabled = $false
-            return
-        }
-    
-        if ($xlsFiles.Count -eq 0) {
-            Write-Log "No XLS/XLSM files found in queue!"
-            Set-Status "No files found" "Error"
-            [System.Windows.Forms.MessageBox]::Show("No .xls or .xlsm files found!", "Info", "OK", "Information")
-            $btnConvert.Enabled = $true
-            $btnQueueAdd.Enabled = $true
-            $btnQueueClear.Enabled = $true
-            $btnCancel.Enabled = $false
-            return
-        }
-    
-        Write-Log "Found $($xlsFiles.Count) file(s) across batch"
-    
+        Write-Log "Queue: $($queue.Files.Count) to convert; $($queue.AlreadyXlsx.Count) already XLSX; $($queue.Errors.Count) scan error(s)."
+        Write-Log "Original action: $action. Timeout: $timeout seconds per file."
         $progressBar.Value = 0
-        $progressBar.Maximum = $xlsFiles.Count
-    
-        $objExcel = $null
-    
-        try {
-            Set-Status "Starting Excel..." "Working"
-            Write-Log "Initializing Excel..."
-            $objExcel = New-Object -ComObject Excel.Application -ErrorAction Stop
-            $objExcel.Visible = $chkShowExcel.Checked
-            $objExcel.DisplayAlerts = $false
-            $objExcel.AutomationSecurity = 3 # msoAutomationSecurityForceDisable
-            Write-Log "Excel ready"
-        
-            $xlOpenXMLWorkbook = 51
-            $converted = 0
-            $failed = 0
-        
-            foreach ($file in $xlsFiles) {
-                if ($script:cancelProcessing -eq $true) {
-                    Write-Log "PROCESS CANCELED BY USER!"
-                    break
-                }
-                $current = $progressBar.Value + 1
-                Set-Status "Converting $current of $($xlsFiles.Count)..." "Working"
-            
-                try {
-                    Write-Log "Converting: $($file.Name)"
-                
-                    # Check if file name matches known virus file names
-                    if (Test-X97MLaroux -FilePath $file.FullName) {
-                        Write-Log "  [VIRUS] Detected X97M/Laroux infected file!"
-                        try {
-                            Remove-Item $file.FullName -Force
-                            Write-Log "  [VIRUS] Deleted infected file"
-                        }
-                        catch {
-                            Write-Log "  [VIRUS] Could not delete - file in use"
-                        }
-                        $failed++
-                        $progressBar.Value++
-                        [System.Windows.Forms.Application]::DoEvents()
-                        continue
-                    }
-                
-                    $doc = $objExcel.WorkBooks.Open($file.FullName)
-                
-                    # Deep scan workbook for virus modules and macros
-                    $virusScan = Test-WorkbookForVirus -Workbook $doc
-                    if ($virusScan.Infected) {
-                        Write-Log "  [VIRUS] Found infected modules: $($virusScan.Modules -join ', ')"
-                        $removedMacros = Remove-VirusFromWorkbook -Workbook $doc
-                        if ($removedMacros -gt 0) {
-                            Write-Log "  [VIRUS] Cleaned $removedMacros malicious module(s)"
-                        }
-                    }
-                
-                    $newPath = Join-Path $file.Directory "$($file.BaseName).xlsx"
-                
-                    if (Test-Path $newPath) {
-                        $newPath = Join-Path $file.Directory "$($file.BaseName)_converted.xlsx"
-                    }
-                
-                    $doc.SaveAs($newPath, $xlOpenXMLWorkbook)
-                    $doc.Close($false)
-                
-                    # Handle original file
-                    if ($chkDeleteOld.Checked) {
-                        Remove-Item $file.FullName -Force
-                        Write-Log "  Deleted original"
-                    }
-                    elseif ($chkMoveOld.Checked) {
-                        $oldFolder = Join-Path $file.Directory "old"
-                        if (-not (Test-Path $oldFolder)) {
-                            New-Item $oldFolder -ItemType Directory -Force | Out-Null
-                        }
-                        Move-Item $file.FullName $oldFolder -Force
-                        Write-Log "  Moved to old folder"
-                    }
-                
-                    Write-Log "  OK -> $($file.BaseName).xlsx"
-                    $converted++
-                }
-                catch {
-                    Write-Log "  ERROR: $($_.Exception.Message)"
-                    $failed++
-                    try { $doc.Close($false) } catch {}
-                }
-            
-                $progressBar.Value++
+        $progressBar.Maximum = [Math]::Max(1, $queue.Files.Count)
+        if ($results.Count -gt 0) { $results | Export-Csv -LiteralPath $report -NoTypeInformation -Encoding UTF8 }
+        foreach ($file in $queue.Files) {
+            if ($script:cancelProcessing) {
+                $results.Add([pscustomobject]@{ Source = $file.FullName; Output = ''; Archive = ''; Status = 'NotProcessed'; Error = 'Batch canceled'; DurationSeconds = 0 })
+                continue
+            }
+            Set-Status "Converting $($progressBar.Value + 1) / $($queue.Files.Count)..." "Working"
+            Write-Log "Converting: $($file.FullName)"
+            $result = Invoke-ECFile -Source $file.FullName -OriginalAction $action -TimeoutSeconds $timeout -ShowExcel $showExcel -OnProgress {
                 [System.Windows.Forms.Application]::DoEvents()
+                return (-not $script:cancelProcessing)
             }
-        
-            Write-Log "=========================================="
-            Write-Log "Completed! Success: $converted, Failed: $failed"
-        
-            # Final virus check after conversion
-            Write-Log "Final security scan..."
-            $finalVirusCheck = Remove-X97MLarouxVirus
-            if ($finalVirusCheck) {
-                Write-Log "[SECURITY] Additional virus files removed after conversion"
-            }
-        
-            Set-Status "Done: $converted OK, $failed failed" "Success"
-        
-            [System.Windows.Forms.MessageBox]::Show(
-                "Conversion completed!`n`nSuccess: $converted`nFailed: $failed", 
-                "Result", "OK", "Information"
-            )
+            $results.Add($result)
+            Write-Log "$($result.Status): $($result.Source) -> $($result.Output) $($result.Error)"
+            $progressBar.Value++
+            # Persist each completed file so a later failure does not lose the report.
+            $result | Select-Object Source, Output, Archive, Status, Error, DurationSeconds |
+                Export-Csv -LiteralPath $report -Append -NoTypeInformation -Encoding UTF8
         }
-        catch {
-            Write-Log "CRITICAL ERROR: $($_.Exception.Message)"
-            Set-Status "Error occurred" "Error"
-            [System.Windows.Forms.MessageBox]::Show(
-                "Error: $($_.Exception.Message)`n`nMake sure Microsoft Excel is installed.", 
-                "Error", "OK", "Error"
-            )
-        }
-        finally {
-            $btnConvert.Enabled = $true
-            $btnQueueAdd.Enabled = $true
-            $btnQueueClear.Enabled = $true
-            $btnCancel.Enabled = $false
-            
-            if ($objExcel) {
-                try {
-                    $objExcel.Quit()
-                    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($objExcel) | Out-Null
-                }
-                catch {}
-                $objExcel = $null
-            }
-            [GC]::Collect()
-            [GC]::WaitForPendingFinalizers()
-        }
-    })
+        if ($results.Count -gt 0) { $results | Select-Object Source, Output, Archive, Status, Error, DurationSeconds | Export-Csv -LiteralPath $report -NoTypeInformation -Encoding UTF8 }
+        $ok = @($results | Where-Object Status -eq 'Converted').Count
+        $warn = @($results | Where-Object { $_.Status -in 'ConvertedWithWarning', 'OutputSaved' }).Count
+        $bad = @($results | Where-Object { $_.Status -in 'Failed', 'TimedOut', 'ScanError' }).Count
+        $state = if ($script:cancelProcessing) { 'Canceled' } elseif ($bad -gt 0 -or $warn -gt 0) { 'Finished with issues' } else { 'Finished' }
+        $statusType = if ($bad -gt 0) { 'Error' } elseif ($warn -gt 0 -or $script:cancelProcessing) { 'Working' } else { 'Success' }
+        Set-Status "$state`: $ok OK, $warn warnings, $bad errors" $statusType
+        Write-Log "Report: $report"
+        [System.Windows.Forms.MessageBox]::Show("$state`n`nConverted: $ok`nWarnings: $warn`nErrors: $bad`nAlready XLSX: $($queue.AlreadyXlsx.Count)`n`nReport: $report", "Batch result", "OK", "Information")
+    } catch {
+        Write-Log "BATCH ERROR: $($_.Exception.Message)"
+        Set-Status "Batch stopped: $($_.Exception.Message)" "Error"
+    } finally {
+        $script:processing = $false
+        foreach ($control in $controls) { $control.Enabled = $true }
+        $chkMoveOld.Enabled = -not $chkDeleteOld.Checked
+        $btnCancel.Enabled = $false
+    }
+})
 
 # Show form
 $form.Add_Shown({ $form.Activate() })
