@@ -9,7 +9,7 @@
 - Add per-file CSV reports, headless batch entry point and regression/Windows Excel smoke tests.
 - External-link workbooks retain originals with a review warning.
 
-Verification: core and subprocess tests executed on macOS PowerShell 7. Windows/Excel/real sync integration remains to be run; see the audit report.
+Verification: 12 core tests, 6 subprocess tests, and script parsing pass on macOS PowerShell 7 and Windows CI with PowerShell 5.1 and 7. Actual desktop Excel COM, WinForms, and live OneDrive/SharePoint sync integration remain to be run; see the audit report.
 
 ---
 
