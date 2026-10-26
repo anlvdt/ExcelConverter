@@ -1,3 +1,18 @@
+# v1.2.0 — 2026-10-26
+
+- Fix queue deduplication losing Name/Directory/BaseName and breaking output paths.
+- Add native Unicode long-path IO and short local staging for OneDrive/SharePoint synced folders; XLSB support.
+- Report existing XLSX explicitly; archives must be extracted first.
+- Isolate each file in a worker with timeout/cancel and owned Excel process cleanup.
+- Validate/reopen output, verify destination hash, publish without overwriting, preserve originals by default.
+- Remove filename-based deletion and automatic XLSTART cleanup from conversion.
+- Add per-file CSV reports, headless batch entry point and regression/Windows Excel smoke tests.
+- External-link workbooks retain originals with a review warning.
+
+Verification: core and subprocess tests executed on macOS PowerShell 7. Windows/Excel/real sync integration remains to be run; see the audit report.
+
+---
+
 ## Excel Converter v1.1.0
 
 **Convert XLS/XLSM to XLSX with X97M/Laroux Virus Protection**
